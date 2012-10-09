@@ -5,6 +5,7 @@
 #include "Controller.h"
 #include <string>
 #include <stdlib.h>
+#include <sstream>
 
 using namespace std;
 
@@ -228,23 +229,28 @@ int main( int argc, char* args[] )
 		if(controller.pushRight())
 		{
 			xPos += (SPEED * timeElapsedMs/1000.0f);
-			i = 0;
 		}
 		if(controller.pushLeft())
 		{
 			xPos -= (SPEED * timeElapsedMs/1000.0f);
-			i = 1;
 		}
 		if(controller.pushUp())
 		{
 			yPos -= (SPEED * timeElapsedMs/1000.0f);
-			i = 2;
 		}
 		if(controller.pushDown())
 		{
 			yPos += (SPEED * timeElapsedMs/1000.0f);
-			i = 3;
 		}
+
+		if(controller.tapAbility1())
+			i = 0;
+		else if(controller.tapAbility2())
+			i = 1;
+		else if(controller.tapPrimary())
+			i = 2;
+		else if(controller.tapSecondary())
+			i = 3;
 		
 		switch(i)
 		{
@@ -262,15 +268,16 @@ int main( int argc, char* args[] )
 				break;
 		}
 
+		//test - float angle
+		float angle = controller.detectLookAngle(1024/2, 768/2, 0, 0);
+
 		//Render the text
-		//test
-		
-		string text = "test";
-//		if(controller.prevKeyState[SDLK_LEFT])
-//			text = "(Previous)";
-//		if(controller.curKeyState[SDLK_LEFT])
-//			text += "(Current)";
-//		controller.pushRight();
+		std::string s;
+		std::stringstream out;
+		out << "\n Angle Degrees: ";
+		out << (int)angle;
+		string resultCursorStr = out.str();
+		string text = resultCursorStr;
 		
 		SDL_Surface *message = TTF_RenderText_Solid( font, text.c_str(), textColor );
     
