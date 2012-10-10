@@ -39,7 +39,7 @@ SDL_Surface* load_image(std::string filename){
 
 
 bool load_files(){
-	background = load_image("black.jpg");
+	background = load_image("res/pumpkin.png");
 	if(background == NULL)
 		return false;
 	return true;
@@ -60,7 +60,6 @@ void cleanup(){
 int main(int argc, char* argv[]){
 	bool quit = false;
 
-	std::cout << "hey" << std::endl;
 	if(init() == false)
 		return 1;
 	if(load_files() == false)
