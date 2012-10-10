@@ -2,8 +2,12 @@
 #include <vector>
 using namespace std;
 
+#define PI_FLOAT	3.14159f
+
 class Controller
 {
+
+
 public:
 	int xCursor;
 	int yCursor;
@@ -17,7 +21,8 @@ public:
 	bool init();
 	//Saves the previous frame's state and updates the current frame's controller state.
 	void update();
-
+	//It reads in the direction of of the controller/keys that dictate where the player is looking and returns a float in degrees. 0 degrees faces east. 180 degrees face west. -90 degrees faces north. 90 degrees face north. -JVL
+	float detectLookAngle(int xPosition, int yPosition, int offsetX, int offsetY);
 /*Taps*/
 	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapUp(); 
@@ -87,8 +92,7 @@ public:
 	bool releaseAbility2();
 	bool releaseAbility3();
 	bool releaseAbility4();
-	//It reads in the direction of of the controller/keys that dictate where the player is looking and returns a float in degrees. 0 degrees face north. -JVL
-	float detectLookAngle(int xPosition, int yPosition, int offsetX, int offsetY);
+
 
 protected:
 	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL

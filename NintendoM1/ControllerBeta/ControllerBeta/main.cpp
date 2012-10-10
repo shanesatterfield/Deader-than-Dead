@@ -269,7 +269,7 @@ int main( int argc, char* args[] )
 		}
 
 		//test - float angle
-		float angle = controller.detectLookAngle(1024/2, 768/2, 0, 0);
+		float angle = controller.detectLookAngle(xPos + clip[0].w/2 , yPos + clip[0].h/2, 0, 0);
 
 		//Render the text
 		std::string s;
@@ -289,8 +289,7 @@ int main( int argc, char* args[] )
     
 		//Apply the images to the screen
 		apply_surface( 0, 150, message, screen );
-
-
+		
 		//Update the screen
 		if( SDL_Flip( screen ) == -1 )
 		{

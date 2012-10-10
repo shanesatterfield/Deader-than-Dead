@@ -1,14 +1,14 @@
 #include "Controller.h"
 
-//empty constructor. Call the init function to initialize.-JVL
+//constructor. Call the init function to initialize.-JVL
 Controller::Controller(){} 
-
 
 bool Controller::init()
 {
 	curKeyState = SDL_GetKeyState(NULL);
 	xCursor= 0; yCursor= 0;
 	curMouseState = SDL_GetMouseState(&xCursor,&yCursor);
+
 	initStates();
 
 	//Initialization verification.
@@ -104,7 +104,7 @@ float Controller::detectLookAngle(int curPosX, int curPosY, int offsetX, int off
 	float directionToLookX = xCursor - (curPosX - offsetX);
 	float directionToLookY = yCursor - (curPosY - offsetY);
 
-	return std::atan2(directionToLookX, directionToLookY);
+	return std::atan2(directionToLookY, directionToLookX) * 180.0f/PI_FLOAT;
 }
 
 
