@@ -3,6 +3,7 @@
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 #include "Controller.h"
+#include "KeyboardMouse.h"
 #include <string>
 #include <stdlib.h>
 #include <sstream>
@@ -32,7 +33,7 @@ TTF_Font *font = NULL;
 //The color of the font
 SDL_Color textColor = { 0, 0, 0 };
 
-Controller controller;
+Controller * controller;
 
 SDL_Surface *load_image( std::string filename )
 {
@@ -102,10 +103,15 @@ bool init()
         return false;    
     }
 
-	if(!controller.init())
-	{
+
+	//Initialize controller
+	if(false) 
+		{} //TODO: Use conditioning to determine whether to use keyboard, gamepad or other input. -JVL
+	else 
+		controller = new KeyboardMouse;
+
+	if(!controller->init())
 		return false;
-	}
 
     //Set the window caption
     SDL_WM_SetCaption( "Controller BETA Joshua Liong", NULL );
@@ -220,36 +226,36 @@ int main( int argc, char* args[] )
 			}
 		}
 
-		controller.update();
-		if(controller.releaseCancel())
+		controller->update();
+		if(controller->releaseCancel())
 		{
-			quit = true; //ESC terminates the program.
+			quit = true; //ESC terminates the program
 		}
 
-		if(controller.pushRight())
+		if(controller->pushRight())
 		{
 			xPos += (SPEED * timeElapsedMs/1000.0f);
 		}
-		if(controller.pushLeft())
+		if(controller->pushLeft())
 		{
 			xPos -= (SPEED * timeElapsedMs/1000.0f);
 		}
-		if(controller.pushUp())
+		if(controller->pushUp())
 		{
 			yPos -= (SPEED * timeElapsedMs/1000.0f);
 		}
-		if(controller.pushDown())
+		if(controller->pushDown())
 		{
 			yPos += (SPEED * timeElapsedMs/1000.0f);
 		}
 
-		if(controller.tapAbility1())
+		if(controller->tapAbility1())
 			i = 0;
-		else if(controller.tapAbility2())
+		else if(controller->tapAbility2())
 			i = 1;
-		else if(controller.tapPrimary())
+		else if(controller->tapPrimary())
 			i = 2;
-		else if(controller.tapSecondary())
+		else if(controller->tapSecondary())
 			i = 3;
 		
 		switch(i)
@@ -269,7 +275,7 @@ int main( int argc, char* args[] )
 		}
 
 		//test - float angle
-		float angle = controller.detectLookAngle(xPos + clip[0].w/2 , yPos + clip[0].h/2, 0, 0);
+		float angle = controller->detectLookAngle(xPos + clip[0].w/2 , yPos + clip[0].h/2, 0, 0);
 
 		//Render the text
 		std::string s;
