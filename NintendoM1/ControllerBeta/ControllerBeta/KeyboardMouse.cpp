@@ -21,6 +21,7 @@ bool KeyboardMouse::init(void)
 
 void KeyboardMouse::update(void)
 {
+	curToPrevStates(); //sets the old "current" as the previous.
 	SDL_PumpEvents(); //updates the current keystate with the key state of the current frame.
 	curMouseState = SDL_GetMouseState(&xCursor,&yCursor); //Gets the current mouse state.
 	handleDirectionPresses(); //goes to base at controller.cpp 
@@ -63,7 +64,7 @@ bool KeyboardMouse::keyReadSecondary(void)
 	//Secondary (ENTER, SPACE or Left-Click)
 	return (
 		curKeyState[SDLK_KP_ENTER] != 0 || 
-		SDL_GetMouseState(NULL,NULL)&SDL_BUTTON(3) != 0);
+		SDL_GetMouseState(NULL,NULL)&SDL_BUTTON(3));
 }
 bool KeyboardMouse::keyReadToggle(void)
 {

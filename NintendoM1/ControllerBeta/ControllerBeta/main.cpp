@@ -1,9 +1,11 @@
 //The headers
+#pragma once
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 #include "Controller.h"
 #include "KeyboardMouse.h"
+#include "Animation.h"
 #include <string>
 #include <stdlib.h>
 #include <sstream>
@@ -33,7 +35,9 @@ TTF_Font *font = NULL;
 //The color of the font
 SDL_Color textColor = { 0, 0, 0 };
 
+//New features!
 Controller * controller;
+Animation * animationTest;
 
 SDL_Surface *load_image( std::string filename )
 {
@@ -111,6 +115,10 @@ bool init()
 		controller = new KeyboardMouse;
 
 	if(!controller->init())
+		return false;
+
+	animationTest = new Animation();
+	if(!animationTest->init(2,2,100,100,load_image( "dots.png" )))
 		return false;
 
     //Set the window caption
@@ -205,6 +213,7 @@ int main( int argc, char* args[] )
 	Uint32 curTimeStamp = 0;
     //Apply the sprites to the screen
 	Uint8* keystates = SDL_GetKeyState(NULL);
+	int testi = 0;
 	while(!quit) 		//While the user hasn't quit
 	{
 		//Fill/Reset the screen 
@@ -250,29 +259,46 @@ int main( int argc, char* args[] )
 		}
 
 		if(controller->tapAbility1())
+		{
 			i = 0;
+			animationTest->switchRow(0);
+		}
 		else if(controller->tapAbility2())
+		{
 			i = 1;
+			animationTest->switchRow(1);
+		}
 		else if(controller->tapPrimary())
+		{
 			i = 2;
+			testi++;
+			animationTest->enable = !animationTest->enable; //Toggle animation test.
+			animationTest->switchRow(0);
+		}
 		else if(controller->tapSecondary())
+		{
 			i = 3;
+			animationTest->switchRow(1);
+		}
 		
 		switch(i)
 		{
 			case 0:
-				apply_surface( xPos, yPos, dots, screen, &clip[ 0 ] );
+				animationTest->curRow = 0;
 				break;
 			case 1:
-				apply_surface( xPos, yPos, dots, screen, &clip[ 1 ] );
+				animationTest->curRow = 0;
 				break;
 			case 2:
-				apply_surface( xPos, yPos, dots, screen, &clip[ 2 ] );
+				animationTest->curRow = 1;
 				break;
 			default:
-				apply_surface( xPos, yPos, dots, screen, &clip[ 3 ] );
+				animationTest->curRow = 1;
 				break;
 		}
+		animationTest->update(timeElapsedMs);
+		animationTest->draw(xPos,yPos, screen); 
+
 
 		//test - float angle
 		float angle = controller->detectLookAngle(xPos + clip[0].w/2 , yPos + clip[0].h/2, 0, 0);
@@ -280,8 +306,8 @@ int main( int argc, char* args[] )
 		//Render the text
 		std::string s;
 		std::stringstream out;
-		out << "\n Angle Degrees: ";
-		out << (int)angle;
+		//out << "\n Angle Degrees: ";
+		out << testi;
 		string resultCursorStr = out.str();
 		string text = resultCursorStr;
 		
