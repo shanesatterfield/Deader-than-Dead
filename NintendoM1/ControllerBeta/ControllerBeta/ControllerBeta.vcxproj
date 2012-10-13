@@ -68,11 +68,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Clock.cpp" />
     <ClCompile Include="Controller.cpp" />
+    <ClCompile Include="Death.cpp" />
+    <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="KeyboardMouse.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
+    <ClInclude Include="Clock.h" />
+    <ClInclude Include="Constants.h" />
     <ClInclude Include="Controller.h" />
+    <ClInclude Include="Death.h" />
+    <ClInclude Include="GameObject.h" />
+    <ClInclude Include="KeyboardMouse.h" />
+    <ClInclude Include="Unit.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Sprites\giraffe.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

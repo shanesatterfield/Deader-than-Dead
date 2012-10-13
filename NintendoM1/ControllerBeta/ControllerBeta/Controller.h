@@ -1,70 +1,49 @@
-#include "SDL.h"
-#include <vector>
-using namespace std;
+#pragma once
 
-#define PI_FLOAT	3.14159f
+#include "SDL.h"
+
+using namespace std;
 
 class Controller
 {
-
-
 public:
 	int xCursor;
 	int yCursor;
 
-	vector<int> moveDirection;
-	float lookRadians;
-
 	//Empty Constructor. Call the init() function to initialize. -JVL
 	Controller(); 
 	//Initializes all the states to false.
-	bool init();
+	virtual bool init();
 	//Saves the previous frame's state and updates the current frame's controller state.
-	void update();
+	virtual void update();
 	//It reads in the direction of of the controller/keys that dictate where the player is looking and returns a float in degrees. 0 degrees faces east. 180 degrees face west. -90 degrees faces north. 90 degrees face north. -JVL
-	float detectLookAngle(int xPosition, int yPosition, int offsetX, int offsetY);
+	virtual float detectLookAngle(int xPosition, int yPosition, int offsetX, int offsetY)=0;
+
+
 /*Taps*/
 	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapUp(); 
-	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapDown();
-	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapLeft();
-	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapRight();
-	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapPrimary();
-	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapSecondary();
-	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapToggle();
-	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapCancel();
-	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapAbility1();
-	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapAbility2();
-	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapAbility3();
-	//Taps ring true on the frame of the initial push and false on the next frame. Taps ring true after the button is released then pushed. -JVL
 	bool tapAbility4();
 	
 /*Pushes*/
 	//Push ring true on the frame with initial push and false as soon as it is released. -JVL
 	bool pushUp();
-	//Push ring true on the frame with initial push and false as soon as it is released. -JVL
 	bool pushDown();
-	//Push ring true on the frame with initial push and false as soon as it is released. -JVL
 	bool pushLeft();
-	//Push ring true on the frame with initial push and false as soon as it is released. -JVL
 	bool pushRight();
-	//Push ring true on the frame with initial push and false as soon as it is released. -JVL
 	bool pushPrimary();
-	//Push ring true on the frame with initial push and false as soon as it is released. -JVL
 	bool pushSecondary();
-	//Push ring true on the frame with initial push and false as soon as it is released. -JVL
 	bool pushToggle();
-	//Push ring true on the frame with initial push and false as soon as it is released. -JVL
 	bool pushCancel();
 	bool pushAbility1();
 	bool pushAbility2();
@@ -72,66 +51,41 @@ public:
 	bool pushAbility4();
 
 /*Releases*/
-	//Release rings true as soon as the button is released then false on the next frame. -JVL
 	bool releaseUp(); 
-	//Release rings true as soon as the button is released then false on the next frame. -JVL
 	bool releaseDown();
-	//Release rings true as soon as the button is released then false on the next frame. -JVL
 	bool releaseLeft();
-	//Release rings true as soon as the button is released then false on the next frame. -JVL
 	bool releaseRight();
-	//Release rings true as soon as the button is released then false on the next frame. -JVL
 	bool releasePrimary();
-	//Release rings true as soon as the button is released then false on the next frame. -JVL
 	bool releaseSecondary();
-	//Release rings true as soon as the button is released then false on the next frame. -JVL
 	bool releaseToggle();
-	//Release rings true as soon as the button is released then false on the next frame. -JVL
 	bool releaseCancel();
 	bool releaseAbility1();
 	bool releaseAbility2();
 	bool releaseAbility3();
 	bool releaseAbility4();
+	
+protected: //Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
+	virtual bool keyReadUp();
+	virtual bool keyReadDown();
+	virtual bool keyReadLeft();
+	virtual bool keyReadRight();
+	virtual bool keyReadPrimary();
+	virtual bool keyReadSecondary();
+	virtual bool keyReadToggle();
+	virtual bool keyReadCancel();
+	virtual bool keyReadAbility1();
+	virtual bool keyReadAbility2();
+	virtual bool keyReadAbility3();
+	virtual bool keyReadAbility4();
 
-
-protected:
-	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
-	bool keyReadUp(); 
-	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
-	bool keyReadDown();
-	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
-	bool keyReadLeft();
-	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
-	bool keyReadRight();
-	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
-	bool keyReadPrimary();
-	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
-	bool keyReadSecondary();
-	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
-	bool keyReadToggle();
-	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
-	bool keyReadCancel();
-	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
-	bool keyReadAbility1();
-	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
-	bool keyReadAbility2();
-	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
-	bool keyReadAbility3();
-	//Reads the SDL Keys from the physical controller and returns whether the keys pressed correspond to the action desired. -JVL
-	bool keyReadAbility4();
-
-private:
-	Uint8* curKeyState;
-	Uint8 curMouseState;
 	void initStates();
 	void curToPrevStates();
-	void updateStates();
 	void handleDirectionPresses();
 	void handleSelectionPresses();
 
-	vector<int> updateMoveDirection();
 	float updateLookDirection();
 
+private:
 /*Currently pressed states*/
 	//States whether the button is pressed in the current frame. -JVL
 	bool curPressedUp; 
