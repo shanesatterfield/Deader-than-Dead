@@ -10,8 +10,6 @@ public:
 	int xCursor;
 	int yCursor;
 
-	float lookRadians;
-
 	//Empty Constructor. Call the init() function to initialize. -JVL
 	Controller(); 
 	//Initializes all the states to false.

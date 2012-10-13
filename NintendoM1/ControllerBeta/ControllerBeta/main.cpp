@@ -6,6 +6,8 @@
 #include "Controller.h"
 #include "KeyboardMouse.h"
 #include "Animation.h"
+#include "Death.h"
+#include "Clock.h"
 #include <string>
 #include <stdlib.h>
 #include <sstream>
@@ -38,6 +40,8 @@ SDL_Color textColor = { 0, 0, 0 };
 //New features!
 Controller * controller;
 Animation * animationTest;
+Death * deathPlayer;
+Clock clock;
 
 SDL_Surface *load_image( std::string filename )
 {
@@ -92,6 +96,7 @@ bool init()
         return false;
     }
 
+
     //Set up the screen
     screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
 
@@ -118,8 +123,14 @@ bool init()
 		return false;
 
 	animationTest = new Animation();
-	if(!animationTest->init(2,2,100,100,load_image( "dots.png" )))
+	if(!animationTest->init(3, 5,64,64, load_image( "Sprites//giraffe.png" )))
 		return false;
+
+	if(!clock.init()) //initialize the clock.
+		return false;
+
+	//Initialize Death
+	deathPlayer = new Death(700, 700, load_image( "Sprites//giraffe.png" ), controller);
 
     //Set the window caption
     SDL_WM_SetCaption( "Controller BETA Joshua Liong", NULL );
@@ -209,124 +220,68 @@ int main( int argc, char* args[] )
 	float xPos = 0;
 	float yPos = 0;
 
-	Uint32 prevTimeStamp = 0;
-	Uint32 curTimeStamp = 0;
     //Apply the sprites to the screen
 	Uint8* keystates = SDL_GetKeyState(NULL);
-	int testi = 0;
 	while(!quit) 		//While the user hasn't quit
 	{
-		//Fill/Reset the screen 
-		SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
-
-		//Timer
-		prevTimeStamp = curTimeStamp;
-        curTimeStamp = SDL_GetTicks();
-        Uint32 timeElapsedMs = curTimeStamp - prevTimeStamp;
-
-		//While there's events to handle
-		while( SDL_PollEvent( &event ) )
+		clock.update();
+		if(clock.allowTick()) //time based stuff goes in here.
 		{
-			//If the user has Xed out the window
-			if( event.type == SDL_QUIT )
+			//Fill/Reset the screen 
+			SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0, 0, 0xFF ) );
+
+			//Timer
+			Uint32 timeElapsedMs = clock.timeElapsed;
+
+			//While there's events to handle
+			while( SDL_PollEvent( &event ) )
 			{
-				//Quit the program
-				quit = true;
+				//If the user has Xed out the window
+				if( event.type == SDL_QUIT )
+				{
+					//Quit the program
+					quit = true;
+				}
 			}
-		}
 
-		controller->update();
-		if(controller->releaseCancel())
-		{
-			quit = true; //ESC terminates the program
-		}
+			controller->update();		
 
-		if(controller->pushRight())
-		{
-			xPos += (SPEED * timeElapsedMs/1000.0f);
-		}
-		if(controller->pushLeft())
-		{
-			xPos -= (SPEED * timeElapsedMs/1000.0f);
-		}
-		if(controller->pushUp())
-		{
-			yPos -= (SPEED * timeElapsedMs/1000.0f);
-		}
-		if(controller->pushDown())
-		{
-			yPos += (SPEED * timeElapsedMs/1000.0f);
-		}
+			if(controller->releaseCancel())
+			{
+				quit = true; //ESC terminates the program
+			}
 
-		if(controller->tapAbility1())
-		{
-			i = 0;
-			animationTest->switchRow(0);
-		}
-		else if(controller->tapAbility2())
-		{
-			i = 1;
-			animationTest->switchRow(1);
-		}
-		else if(controller->tapPrimary())
-		{
-			i = 2;
-			testi++;
-			animationTest->enable = !animationTest->enable; //Toggle animation test.
-			animationTest->switchRow(0);
-		}
-		else if(controller->tapSecondary())
-		{
-			i = 3;
-			animationTest->switchRow(1);
-		}
+			animationTest->update(timeElapsedMs);
+			deathPlayer->update(timeElapsedMs);
+			animationTest->draw(xPos,yPos, screen); 
+			deathPlayer->draw(screen);
+
+			//Render the text
+			std::string s;
+			std::stringstream out1;
+			std::stringstream out2;
+			out1 << controller->detectLookAngle(deathPlayer->centerX(), deathPlayer->centerY(), 0,0);
+			out2 << timeElapsedMs;
+			string resultCursorStr = "TimeElapsed: " + out2.str();
+			string text = resultCursorStr;
 		
-		switch(i)
-		{
-			case 0:
-				animationTest->curRow = 0;
-				break;
-			case 1:
-				animationTest->curRow = 0;
-				break;
-			case 2:
-				animationTest->curRow = 1;
-				break;
-			default:
-				animationTest->curRow = 1;
-				break;
-		}
-		animationTest->update(timeElapsedMs);
-		animationTest->draw(xPos,yPos, screen); 
-
-
-		//test - float angle
-		float angle = controller->detectLookAngle(xPos + clip[0].w/2 , yPos + clip[0].h/2, 0, 0);
-
-		//Render the text
-		std::string s;
-		std::stringstream out;
-		//out << "\n Angle Degrees: ";
-		out << testi;
-		string resultCursorStr = out.str();
-		string text = resultCursorStr;
-		
-		SDL_Surface *message = TTF_RenderText_Solid( font, text.c_str(), textColor );
+			SDL_Surface *message = TTF_RenderText_Solid( font, text.c_str(), textColor );
     
-		//If there was an error in rendering the text
-		if( message == NULL )
-		{
-			return 1;    
-		}
+			//If there was an error in rendering the text
+			if( message == NULL )
+			{
+				return 1;    
+			}
     
-		//Apply the images to the screen
-		apply_surface( 0, 150, message, screen );
+			//Apply the images to the screen
+			apply_surface( 0, 150, message, screen );
 		
-		//Update the screen
-		if( SDL_Flip( screen ) == -1 )
-		{
-			return 1;
-		}
+			//Update the screen
+			if( SDL_Flip( screen ) == -1 )
+			{
+				return 1;
+			}
+		}//end clockTick check
 	}
     //Free the images and quit SDL
     clean_up();

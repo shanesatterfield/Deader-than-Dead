@@ -1,3 +1,4 @@
+#pragma once
 #include "SDL.h"
 #include "SDL_image.h"
 
@@ -28,4 +29,20 @@ public:
 	bool init(int numColumns, int numRows, int frameWidth, int frameHeight, SDL_Surface * spriteSheet);		//Initializes 
 	bool update(Uint32 timeElapsedMs);		//returns a boolean when it has reached the final frame. 
 	void draw(int xPos, int yPos, SDL_Surface* destination);
+
+	enum AnimStates
+	{
+		Idle = 0,
+		Down = 1,
+		Right = 2,
+		Up = 3,
+		Left = 4,
+		Attack1Down = 5,
+		Attack1Right = 6,
+		Attack1Up = 7,
+		Attack1Left = 8,
+		Flinch = 8,
+		Dying = 9,
+		Dead = 10
+	};
 };
