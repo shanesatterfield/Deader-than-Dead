@@ -1,20 +1,11 @@
 #include "Controller.h"
 
-//empty constructor. Call the init function to initialize.-JVL
+//constructor. Call the init function to initialize.-JVL
 Controller::Controller(){} 
-
 
 bool Controller::init()
 {
-	curKeyState = SDL_GetKeyState(NULL);
-	xCursor= 0; yCursor= 0;
-	curMouseState = SDL_GetMouseState(&xCursor,&yCursor);
 	initStates();
-
-	//Initialization verification.
-	if (curKeyState == NULL)
-		return false; //Failed to initialize
-	
 	return true;
 }
 
@@ -29,6 +20,10 @@ void Controller::initStates()
 	 curPressedSecondary= false;
 	 curPressedToggle= false;
 	 curPressedCancel= false;
+     curPressedAbility1 = false;
+	 curPressedAbility2 = false;
+	 curPressedAbility3 = false;
+	 curPressedAbility4 = false;
 	//whether the button is up.
 	 prevPressedUp= false;
 	 prevPressedDown= false;
@@ -37,18 +32,15 @@ void Controller::initStates()
 	 prevPressedPrimary= false;
 	 prevPressedSecondary= false;
 	 prevPressedToggle= false;
-	 prevPressedCancel= false;
-
-	vector<int> moveDirection = vector<int>(0,0);
-	vector<int> lookDirection = vector<int>(0,0);
+	 prevPressedCancel = false;
+	 prevPressedAbility1 = false;
+	 prevPressedAbility2 = false;
+	 prevPressedAbility3 = false;
+	 prevPressedAbility4 = false;
 }
 
 void Controller::update()
 {
-	curToPrevStates(); //Sets the current states to previous states.
-	SDL_PumpEvents(); //updates the current keystate with the key state of the current frame.
-
-	//handle direction presses
 	handleDirectionPresses();
 	handleSelectionPresses();
 }
@@ -63,63 +55,53 @@ void Controller::curToPrevStates()
 	 prevPressedSecondary = curPressedSecondary;
 	 prevPressedToggle = curPressedToggle;
 	 prevPressedCancel = curPressedCancel;
+	 prevPressedAbility1 = curPressedAbility1;
+	 prevPressedAbility2 = curPressedAbility2;
+	 prevPressedAbility3 = curPressedAbility3;
+	 prevPressedAbility4 = curPressedAbility4;
 }
 
 
 void Controller::handleDirectionPresses()
 {
-	//up
-	if(curKeyState[SDLK_UP])
-		curPressedUp = true;
-	else
-		curPressedUp = false;
+	curPressedUp = keyReadUp(); 
+	curPressedDown = keyReadDown();
+	curPressedLeft = keyReadLeft();
+	curPressedRight = keyReadRight();
 
-	//down
-	if(curKeyState[SDLK_DOWN])
-		curPressedDown = true;
-	else
-		curPressedDown = false;
-
-	//left
-	if(curKeyState[SDLK_LEFT])
-		curPressedLeft = true;
-	else
-		curPressedLeft = false;
-
-	//right
-	if(curKeyState[SDLK_RIGHT])
-		curPressedRight = true;
-	else
-		curPressedRight = false;
+	//Tony's code. Keep and study for later. -JVL
+	//curPressedUp = &Controller::keyReadUp;
+	//curPressedDown = &Controller::keyReadDown;
+	//curPressedLeft = &Controller::keyReadLeft;
+	//curPressedRight = &Controller::keyReadRight;
 }
 
 void Controller::handleSelectionPresses()
 {
-	//Secondary (ENTER, SPACE or Left-Click)
-	if(curKeyState[SDLK_KP_ENTER] || curKeyState[SDLK_SPACE] || curMouseState&SDL_BUTTON(SDL_BUTTON_LEFT))
-		curPressedPrimary = true;
-	else
-		curPressedPrimary = false;
-
-	//Secondary  (Right-Click)
-	//http://pbeblog.wordpress.com/2009/06/23/getting-mouse-state-in-sdl/
-	if(curMouseState&SDL_BUTTON(SDL_BUTTON_RIGHT))
-		curPressedSecondary = true;
-	else
-		curPressedSecondary = false;
-
-	//Toggle
-	if(curKeyState[SDLK_TAB] || curKeyState[1])
-		curPressedToggle = true;
-	else
-		curPressedToggle = false;
-
-	//Cancel
-	if(curKeyState[SDLK_ESCAPE])
-		curPressedCancel = true;
-	else
-		curPressedCancel = false;
+	curPressedPrimary = keyReadPrimary();
+	curPressedSecondary = keyReadSecondary();
+	curPressedToggle = keyReadToggle();
+	curPressedCancel = keyReadCancel();
+	curPressedAbility1 = keyReadAbility1();
+	curPressedAbility2 = keyReadAbility2();
+	curPressedAbility3 = keyReadAbility3();
+	curPressedAbility4 = keyReadAbility4();
 }
+
+//Cheap workaround to abstraction. I had linker issues that I couldn't fix. -JVL
+bool Controller::keyReadUp(){return false;}
+bool Controller::keyReadDown(){return false;}
+bool Controller::keyReadLeft(){return false;}
+bool Controller::keyReadRight(){return false;}
+bool Controller::keyReadPrimary(){return false;}
+bool Controller::keyReadSecondary(){return false;}
+bool Controller::keyReadToggle(){return false;}
+bool Controller::keyReadCancel(){return false;}
+bool Controller::keyReadAbility1(){return false;}
+bool Controller::keyReadAbility2(){return false;}
+bool Controller::keyReadAbility3(){return false;}
+bool Controller::keyReadAbility4(){return false;}
+
 bool Controller::tapUp(){return !prevPressedUp && curPressedUp;}
 bool Controller::tapDown(){return !prevPressedDown && curPressedDown;}
 bool Controller::tapLeft(){return !prevPressedLeft && curPressedLeft;}
@@ -128,6 +110,11 @@ bool Controller::tapPrimary(){return !prevPressedPrimary && curPressedPrimary;}
 bool Controller::tapSecondary(){return !prevPressedSecondary && curPressedSecondary;}
 bool Controller::tapToggle(){return !prevPressedToggle && curPressedToggle;}
 bool Controller::tapCancel(){return !prevPressedCancel && curPressedCancel;}
+bool Controller::tapAbility1(){return !prevPressedAbility1 && curPressedAbility1;}
+bool Controller::tapAbility2(){return !prevPressedAbility2 && curPressedAbility2;}
+bool Controller::tapAbility3(){return !prevPressedAbility3 && curPressedAbility3;}
+bool Controller::tapAbility4(){return !prevPressedAbility4 && curPressedAbility4;}
+
 bool Controller::pushUp(){return curPressedUp;}
 bool Controller::pushDown(){return curPressedDown;}
 bool Controller::pushLeft(){return curPressedLeft;}
@@ -136,6 +123,11 @@ bool Controller::pushPrimary(){return curPressedPrimary;}
 bool Controller::pushSecondary(){return curPressedSecondary;}
 bool Controller::pushToggle(){return curPressedToggle;}
 bool Controller::pushCancel(){return curPressedCancel;}
+bool Controller::pushAbility1(){return curPressedAbility1;}
+bool Controller::pushAbility2(){return curPressedAbility2;}
+bool Controller::pushAbility3(){return curPressedAbility3;}
+bool Controller::pushAbility4(){return curPressedAbility4;}
+
 bool Controller::releaseUp(){return prevPressedUp && !curPressedUp;} 
 bool Controller::releaseDown(){return prevPressedDown && !curPressedDown;} 
 bool Controller::releaseLeft(){return prevPressedLeft && !curPressedLeft;} 
@@ -144,11 +136,7 @@ bool Controller::releasePrimary(){return prevPressedPrimary && !curPressedPrimar
 bool Controller::releaseSecondary(){return prevPressedSecondary && !curPressedSecondary;} 
 bool Controller::releaseToggle(){return prevPressedToggle && !curPressedToggle;} 
 bool Controller::releaseCancel(){return prevPressedCancel && !curPressedCancel;} 
-
-
-//bool Controller::releaseLeft()
-//{
-//	if(prevKeyState[SDLK_LEFT] && !curKeyState[SDLK_LEFT])
-//		return true;
-//	return false;
-//}
+bool Controller::releaseAbility1(){return prevPressedAbility1 && !curPressedAbility1;}
+bool Controller::releaseAbility2(){return prevPressedAbility2 && !curPressedAbility2;}
+bool Controller::releaseAbility3(){return prevPressedAbility3 && !curPressedAbility3;}
+bool Controller::releaseAbility4(){return prevPressedAbility4 && !curPressedAbility4;}
