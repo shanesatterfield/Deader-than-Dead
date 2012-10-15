@@ -10,3 +10,7 @@ bool Button::check_click(int x, int y){
 	}
 	return bl;
 }
+
+Button::~Button(){
+	SDL_FreeSurface(message);
+}

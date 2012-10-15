@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -17,8 +18,10 @@ SDL_Event event;
 TTF_Font* font = NULL;
 SDL_Color textColor = {0x44,0x44,0x44};
 
-const int BUTTONSIZE = 3;
+const int BUTTONSIZE = 4;
 Button buttonArray[BUTTONSIZE];
+
+const int yMenuOffset = 18;
 
 SDL_Surface* load_image(std::string filename){
 	SDL_Surface* loadedImage = NULL;
@@ -49,7 +52,7 @@ bool init(){
 }
 
 bool load_files(){
-	font = TTF_OpenFont("res/arial.ttf", 28);
+	font = TTF_OpenFont("res/arial.ttf", 18);
 	if(font == NULL)
 		return false;
 	return true;
@@ -63,9 +66,6 @@ void apply_surface(int x, int y, SDL_Surface* source, SDL_Surface *destination){
 }
 
 void cleanup(){
-	for(int i = 0; i < BUTTONSIZE; i++){
-		SDL_FreeSurface(buttonArray[i].message);
-	}
 	TTF_CloseFont(font);
 	TTF_Quit();
 	SDL_Quit();
@@ -73,22 +73,28 @@ void cleanup(){
 
 bool initButtons(){
 	buttonArray[0].message = TTF_RenderText_Solid(font, "Save", textColor);
-	buttonArray[0].box.x = 0;
+	buttonArray[0].box.x = 25;
 	buttonArray[0].box.y = 0;
 	buttonArray[0].box.w = buttonArray[0].message->w;
 	buttonArray[0].box.h = buttonArray[0].message->h;
 
-	buttonArray[1].message = TTF_RenderText_Solid(font, "Load", textColor);
+	buttonArray[1].message = TTF_RenderText_Solid(font, "Load Level", textColor);
 	buttonArray[1].box.x = 100 + buttonArray[0].box.x + buttonArray[0].box.w;
 	buttonArray[1].box.y = 0;
 	buttonArray[1].box.w = buttonArray[1].message->w;
 	buttonArray[1].box.h = buttonArray[1].message->h;
 
-	buttonArray[2].message = TTF_RenderText_Solid(font, "Close", textColor);
+	buttonArray[2].message = TTF_RenderText_Solid(font, "Load Background", textColor);
 	buttonArray[2].box.x = 100 + buttonArray[1].box.x + buttonArray[1].box.w;
 	buttonArray[2].box.y = 0;
 	buttonArray[2].box.w = buttonArray[2].message->w;
 	buttonArray[2].box.h = buttonArray[2].message->h;
+
+	buttonArray[3].message = TTF_RenderText_Solid(font, "Sprite Selector", textColor);
+	buttonArray[3].box.x = 100 + buttonArray[2].box.x + buttonArray[2].box.w;
+	buttonArray[3].box.y = 0;
+	buttonArray[3].box.w = buttonArray[3].message->w;
+	buttonArray[3].box.h = buttonArray[3].message->h;
 
 	for(int i = 0; i < BUTTONSIZE; i++){
 		if(buttonArray[i].message == NULL){
@@ -98,7 +104,7 @@ bool initButtons(){
 
 	return true;
 }
-
+/*
 bool writeToFile(std::string filename, std::vector<Sprites> vec){
 	bool bl = false;
 	ofstream file(filename.c_str());
@@ -108,7 +114,7 @@ bool writeToFile(std::string filename, std::vector<Sprites> vec){
 	}
 	return bl;
 }
-
+*/
 int main(int argc, char* argv[]){
 	bool quit = false;
 
@@ -119,7 +125,7 @@ int main(int argc, char* argv[]){
 	if(initButtons() == false)
 		return 1;
 
-	std::vector<Sprites> vec;
+	//std::vector<Sprites> vec;
 
 	while(!quit){
 		while(SDL_PollEvent(&event)){
@@ -143,7 +149,6 @@ int main(int argc, char* argv[]){
 
 		for(int i = 0; i < BUTTONSIZE; i++){
 			apply_surface(buttonArray[i].box.x, buttonArray[i].box.y, buttonArray[i].message, screen);
-			//std::cout << "Hey" << std::endl;
 		}
 
 		if(SDL_Flip(screen) == -1)

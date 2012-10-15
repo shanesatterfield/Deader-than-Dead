@@ -5,6 +5,7 @@
 
 class Button{
 public:
+	~Button();
 	SDL_Surface* message;
 	SDL_Rect box;
 	bool check_click(int x, int y);
