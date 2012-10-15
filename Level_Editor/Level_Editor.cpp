@@ -3,6 +3,8 @@
 #include "SDL/SDL_ttf.h"
 
 #include "src/Button.h"
+#include "src/StringInput.h"
+
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -13,10 +15,11 @@ const int SCREEN_HEIGHT = 600;
 const int SCREEN_BPP = 32;
 
 SDL_Surface* screen = NULL;
+SDL_Surface* background = NULL;
 SDL_Event event;
 
 TTF_Font* font = NULL;
-SDL_Color textColor = {0x44,0x44,0x44};
+SDL_Color textColor = {0,0,0};
 
 const int BUTTONSIZE = 4;
 Button buttonArray[BUTTONSIZE];
@@ -27,7 +30,7 @@ SDL_Surface* load_image(std::string filename){
 	SDL_Surface* loadedImage = NULL;
 	SDL_Surface* optimizedImage = NULL;
 	loadedImage = IMG_Load(filename.c_str());
-	if(loadedImage == NULL){
+	if(loadedImage != NULL){
 		optimizedImage = SDL_DisplayFormat(loadedImage);
 		SDL_FreeSurface(loadedImage);
 	}
@@ -66,6 +69,7 @@ void apply_surface(int x, int y, SDL_Surface* source, SDL_Surface *destination){
 }
 
 void cleanup(){
+	SDL_FreeSurface(background);
 	TTF_CloseFont(font);
 	TTF_Quit();
 	SDL_Quit();
@@ -115,6 +119,41 @@ bool writeToFile(std::string filename, std::vector<Sprites> vec){
 	return bl;
 }
 */
+
+void loadBackground(bool &quit){
+	StringInput strIn;
+	bool end = false;
+
+	while(!end && !quit){
+		while(SDL_PollEvent(&event)){
+			if(event.type == SDL_QUIT){
+				quit = true;
+			}
+			if(event.type == SDL_KEYDOWN){
+				int temp = strIn.get_input(event);
+				if(temp == 1){
+					SDL_FreeSurface(strIn.textInput);
+					strIn.textInput = TTF_RenderText_Solid(font, strIn.getStr().c_str(), textColor);
+					std::cout << "Hey" << std::endl;
+				}
+				if(temp == 2){
+					background = load_image(strIn.getStr());
+					end = true;
+				}
+			}
+		}
+
+		SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
+
+		strIn.display(SCREEN_WIDTH, SCREEN_HEIGHT, yMenuOffset, screen);
+		std::cout << strIn.getStr() << std::endl;
+
+		if(SDL_Flip(screen) == -1){
+			std::cout << "hey there" << std::endl;
+		}
+	}
+}
+
 int main(int argc, char* argv[]){
 	bool quit = false;
 
@@ -126,6 +165,7 @@ int main(int argc, char* argv[]){
 		return 1;
 
 	//std::vector<Sprites> vec;
+	
 
 	while(!quit){
 		while(SDL_PollEvent(&event)){
@@ -137,8 +177,14 @@ int main(int argc, char* argv[]){
 					for(int i = 0; i < BUTTONSIZE; i++){
 						int x = event.button.x;
 						int y = event.button.y;
+						/*
 						if(buttonArray[i].check_click(x, y)){
 							std::cout << "Clicked" << std::endl;
+						}
+						*/
+						if(buttonArray[1].check_click(x, y)){
+							std::cout << "Clicked" << std::endl;	
+							loadBackground(quit);
 						}
 					}
 				}
@@ -149,6 +195,10 @@ int main(int argc, char* argv[]){
 
 		for(int i = 0; i < BUTTONSIZE; i++){
 			apply_surface(buttonArray[i].box.x, buttonArray[i].box.y, buttonArray[i].message, screen);
+		}
+
+		if(background != NULL){
+			apply_surface(0,yMenuOffset, background, screen);
 		}
 
 		if(SDL_Flip(screen) == -1)
