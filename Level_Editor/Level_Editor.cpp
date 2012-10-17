@@ -4,6 +4,7 @@
 
 #include "src/Button.h"
 #include "src/StringInput.h"
+#include "src/Sprites.h"
 
 #include <string>
 #include <iostream>
@@ -25,13 +26,14 @@ const int BUTTONSIZE = 4;
 Button buttonArray[BUTTONSIZE];
 
 const int yMenuOffset = 18;
+std::vector<Sprites> spriteVec;
 
 SDL_Surface* load_image(std::string filename){
 	SDL_Surface* loadedImage = NULL;
 	SDL_Surface* optimizedImage = NULL;
 	loadedImage = IMG_Load(filename.c_str());
 	if(loadedImage != NULL){
-		optimizedImage = SDL_DisplayFormat(loadedImage);
+		optimizedImage = SDL_DisplayFormatAlpha(loadedImage);
 		SDL_FreeSurface(loadedImage);
 	}
 	return optimizedImage;
@@ -69,6 +71,9 @@ void apply_surface(int x, int y, SDL_Surface* source, SDL_Surface *destination){
 }
 
 void cleanup(){
+	for(int i = 0; i < spriteVec.size(); i++){
+		SDL_FreeSurface(spriteVec[i].spriteSurface);
+	}
 	SDL_FreeSurface(background);
 	TTF_CloseFont(font);
 	TTF_Quit();
@@ -88,13 +93,13 @@ bool initButtons(){
 	buttonArray[1].box.w = buttonArray[1].message->w;
 	buttonArray[1].box.h = buttonArray[1].message->h;
 
-	buttonArray[2].message = TTF_RenderText_Solid(font, "Load Background", textColor);
+	buttonArray[2].message = TTF_RenderText_Solid(font, "Objects", textColor);
 	buttonArray[2].box.x = 100 + buttonArray[1].box.x + buttonArray[1].box.w;
 	buttonArray[2].box.y = 0;
 	buttonArray[2].box.w = buttonArray[2].message->w;
 	buttonArray[2].box.h = buttonArray[2].message->h;
 
-	buttonArray[3].message = TTF_RenderText_Solid(font, "Sprite Selector", textColor);
+	buttonArray[3].message = TTF_RenderText_Solid(font, "Enemies", textColor);
 	buttonArray[3].box.x = 100 + buttonArray[2].box.x + buttonArray[2].box.w;
 	buttonArray[3].box.y = 0;
 	buttonArray[3].box.w = buttonArray[3].message->w;
@@ -163,10 +168,7 @@ int main(int argc, char* argv[]){
 		return 1;
 	if(initButtons() == false)
 		return 1;
-
-	//std::vector<Sprites> vec;
 	
-
 	while(!quit){
 		while(SDL_PollEvent(&event)){
 			if(event.type == SDL_QUIT){
@@ -174,18 +176,29 @@ int main(int argc, char* argv[]){
 			}
 			if(event.type == SDL_MOUSEBUTTONUP){
 				if(event.button.button == SDL_BUTTON_LEFT){
-					for(int i = 0; i < BUTTONSIZE; i++){
-						int x = event.button.x;
-						int y = event.button.y;
-						/*
-						if(buttonArray[i].check_click(x, y)){
-							std::cout << "Clicked" << std::endl;
-						}
-						*/
-						if(buttonArray[1].check_click(x, y)){
-							std::cout << "Clicked" << std::endl;	
-							loadBackground(quit);
-						}
+					int x = event.button.x;
+					int y = event.button.y;
+					bool bl = false;
+					/*
+					if(buttonArray[0].check_click(x, y)){
+						writeToFile(filename, spriteVec);
+					}
+					*/
+					if(buttonArray[1].check_click(x, y)){
+						loadBackground(quit);
+						bl = true;
+					}
+					if(!bl){
+						Sprites temp;
+						temp.spriteSurface = load_image("res/pumpkin.png");
+						temp.box.w = temp.spriteSurface->w;
+						temp.box.h = temp.spriteSurface->h;
+						temp.box.x = x - temp.box.w/2;
+						temp.box.y = y - temp.box.h/2;
+						temp.type = "player";
+						temp.fromFile = "res/pumpkin.png";
+						
+						spriteVec.push_back(temp);
 					}
 				}
 			}
@@ -199,6 +212,10 @@ int main(int argc, char* argv[]){
 
 		if(background != NULL){
 			apply_surface(0,yMenuOffset, background, screen);
+		}
+
+		for(int i = 0; i < spriteVec.size(); i++){
+			apply_surface(spriteVec[i].box.x, spriteVec[i].box.y, spriteVec[i].spriteSurface, screen);
 		}
 
 		if(SDL_Flip(screen) == -1)

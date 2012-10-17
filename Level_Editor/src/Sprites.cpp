@@ -16,6 +16,9 @@ Sprites::Sprites(){
 	clip.w = 0;
 	clip.h = 0;
 }
+
+/*
 Sprites::~Sprites(){
 	SDL_FreeSurface(spriteSurface);
 }
+*/

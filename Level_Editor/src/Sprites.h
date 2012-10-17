@@ -7,7 +7,7 @@
 class Sprites{
 public:
 	Sprites();
-	~Sprites();
+	//~Sprites();
 	SDL_Surface* spriteSurface;
 	SDL_Rect box;
 	SDL_Rect clip;
