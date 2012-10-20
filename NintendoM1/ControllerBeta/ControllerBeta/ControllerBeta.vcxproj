@@ -75,6 +75,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="KeyboardMouse.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="TestMonster.cpp" />
     <ClCompile Include="Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -85,9 +86,11 @@
     <ClInclude Include="Death.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="KeyboardMouse.h" />
+    <ClInclude Include="TestMonster.h" />
     <ClInclude Include="Unit.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\..\..\..\Desktop\BlackTest.png" />
     <None Include="Sprites\giraffe.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
