@@ -22,8 +22,6 @@ void Death::update(Uint32 timeElapsedMs)
 void Death::handleMovement(Uint32 timeElapsedMs)
 {
 	float totalSpeed = PLAYER_MOVEMENT_SPEED * timeElapsedMs/1000.0f;
-	//if(totalSpeed < 1) //Remove code
-	//	totalSpeed = 1.0f;
 	if(controller->pushRight())
 		Death::moveBy(totalSpeed, 0);
 	if(controller->pushLeft())

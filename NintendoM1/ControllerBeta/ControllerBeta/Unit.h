@@ -1,7 +1,6 @@
+#pragma once
 #include "GameObject.h"
 #include "Animation.h"
-
-
 
 class Unit : public GameObject
 {

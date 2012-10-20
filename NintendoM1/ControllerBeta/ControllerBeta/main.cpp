@@ -7,6 +7,7 @@
 #include "KeyboardMouse.h"
 #include "Animation.h"
 #include "Death.h"
+#include "TestMonster.h"
 #include "Clock.h"
 #include <string>
 #include <stdlib.h>
@@ -41,7 +42,9 @@ SDL_Color textColor = { 0, 0, 0 };
 Controller * controller;
 Animation * animationTest;
 Death * deathPlayer;
+TestMonster * testMonster;
 Clock clock;
+SDL_Surface *blackTest = NULL;
 
 SDL_Surface *load_image( std::string filename )
 {
@@ -131,9 +134,13 @@ bool init()
 
 	//Initialize Death
 	deathPlayer = new Death(700, 700, load_image( "Sprites//giraffe.png" ), controller);
+	testMonster = new TestMonster(load_image( "Sprites//giraffe.png" ));
 
     //Set the window caption
     SDL_WM_SetCaption( "Controller BETA Joshua Liong", NULL );
+
+	//Other test stuff
+	blackTest = load_image("Sprites//BlackTest.png");
 
     //If everything initialized fine
     return true;
@@ -251,16 +258,29 @@ int main( int argc, char* args[] )
 				quit = true; //ESC terminates the program
 			}
 
+			
+
 			animationTest->update(timeElapsedMs);
 			deathPlayer->update(timeElapsedMs);
+			testMonster->update(timeElapsedMs);
 			animationTest->draw(xPos,yPos, screen); 
 			deathPlayer->draw(screen);
+			testMonster->draw(screen);
+
+			SDL_Rect playerLocation;
+			SDL_Rect collisionBoxClip;
+			collisionBoxClip.x = 0; 
+			collisionBoxClip.y = 0; 
+			collisionBoxClip.w = deathPlayer->collisionBox.w;
+			collisionBoxClip.h = deathPlayer->collisionBox.h;
+			playerLocation.x = deathPlayer->collisionBox.x;
+			playerLocation.y = deathPlayer->collisionBox.y;
+			SDL_BlitSurface(blackTest, &collisionBoxClip,
+				screen, &playerLocation);
 
 			//Render the text
 			std::string s;
-			std::stringstream out1;
 			std::stringstream out2;
-			out1 << controller->detectLookAngle(deathPlayer->centerX(), deathPlayer->centerY(), 0,0);
 			out2 << timeElapsedMs;
 			string resultCursorStr = "TimeElapsed: " + out2.str();
 			string text = resultCursorStr;

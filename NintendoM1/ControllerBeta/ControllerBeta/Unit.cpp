@@ -2,7 +2,8 @@
 
 Unit::Unit(int xPosInit , int yPosInit , int widthCollision , int heightCollision, 
 	int numSheetColumns , int numSheetRows , int frameWidth , int frameHeight , SDL_Surface * spriteSheet) 
-		: GameObject(xPosInit, yPosInit, widthCollision, heightCollision) 
+		: GameObject(xPosInit, yPosInit, widthCollision, heightCollision, 
+		(int)abs((widthCollision-frameWidth)/2), (int)abs((heightCollision-frameHeight)/2))
 {
 	this->sprite.init(numSheetColumns, numSheetRows, frameWidth, frameHeight, spriteSheet);
 }
@@ -11,7 +12,7 @@ void Unit::update(Uint32 timeElapsedMs){/*Please override*/}
 
 void Unit::draw(SDL_Surface *destination)
 {
-	this->sprite.draw(this->collisionBox.x, this->collisionBox.y, destination);
+	this->sprite.draw(this->pos.x, this->pos.y, destination);
 }
 
 void Unit::setPosition(int xPosNew, int yPosNew)

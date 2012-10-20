@@ -48,6 +48,9 @@
     <ClCompile Include="Clock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TestMonster.cpp">
+      <Filter>Source Files\Units</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Controller.h">
@@ -74,9 +77,15 @@
     <ClInclude Include="Clock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TestMonster.h">
+      <Filter>Header Files\Units</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Sprites\giraffe.png">
+      <Filter>Resource Files\Sprites</Filter>
+    </None>
+    <None Include="..\..\..\..\Desktop\BlackTest.png">
       <Filter>Resource Files\Sprites</Filter>
     </None>
   </ItemGroup>
