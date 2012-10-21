@@ -280,6 +280,7 @@ int main(int argc, char* argv[]){
 					//Checks for a button click.
 					if(buttonArray[1].check_click(x, y)){
 						std::string stringIn = gettingStringInput(quit);
+						stringIn = "res/" + stringIn;
 						background = load_image(stringIn);
 						if(background != NULL){
 							currBackground = stringIn;
@@ -289,6 +290,7 @@ int main(int argc, char* argv[]){
 
 					if(buttonArray[2].check_click(x, y)){
 						std::string stringIn = gettingStringInput(quit);
+						stringIn = "res/" + stringIn;
 						testSurface = load_image(stringIn);
 						if(testSurface != NULL){
 							currFile = stringIn;
@@ -298,6 +300,7 @@ int main(int argc, char* argv[]){
 
 					if(buttonArray[3].check_click(x, y)){
 						std::string stringIn = gettingStringInput(quit);
+						stringIn = "res/" + stringIn;
 						testSurface = load_image(stringIn);
 						if(testSurface != NULL){
 							currFile = stringIn;
