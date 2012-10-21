@@ -33,6 +33,11 @@ std::vector<Sprites> spriteVec;
 //Vector to hold the offset of the panning and scrolling.
 SDL_Rect posOffset;
 
+SDL_Surface* testSurface = NULL;
+std::string currFile = "";
+std::string currType = "";
+std::string currBackground = "";
+
 SDL_Surface* load_image(std::string filename){
 	SDL_Surface* loadedImage = NULL;
 	SDL_Surface* optimizedImage = NULL;
@@ -68,19 +73,19 @@ bool load_files(){
 	return true;
 }
 
-void apply_surface(int x, int y, SDL_Surface* source, SDL_Surface *destination){
+void apply_surface(int x, int y, SDL_Surface* source, SDL_Surface *destination, SDL_Rect *clip = NULL){
 	SDL_Rect offset;
 	offset.x = x;
 	offset.y = y;
-	SDL_BlitSurface(source, NULL, destination, &offset);
+	SDL_BlitSurface(source, clip, destination, &offset);
 }
 
 //Apply a surface, but with the offsets built in.
-void apply_surface_wOffset(int x, int y, SDL_Surface* source, SDL_Surface *destination){
+void apply_surface_wOffset(int x, int y, SDL_Surface* source, SDL_Surface *destination, SDL_Rect *clip = NULL){
 	SDL_Rect offset;
 	offset.x = x + posOffset.x;
 	offset.y = y + posOffset.y;
-	SDL_BlitSurface(source, NULL, destination, &offset);
+	SDL_BlitSurface(source, clip, destination, &offset);
 }
 
 void cleanup(){
@@ -132,13 +137,15 @@ bool initButtons(){
 //Writes the position of the sprites to the file.
 bool writeToFile(std::string filename, std::vector<Sprites> vec){
 	bool bl = false;
+	std::string finalName = "levels/";
+	finalName += filename;
 	std::ofstream file;
-	file.open(filename.c_str());
+	file.open(finalName.c_str());
 	if(file.is_open()){
 		bl = true;
 
 		if(background != NULL){
-			file << "res/background2.png" << '\n';
+			file << currBackground << '\n';
 		}
 		for(int i = 0; i < spriteVec.size(); i++){
 			file << spriteVec[i].box.x << " ";
@@ -154,25 +161,24 @@ bool writeToFile(std::string filename, std::vector<Sprites> vec){
 	return bl;
 }
 
-//Gets string input and tries to load an image into the background surface if given a proper path.
-void loadBackground(bool &quit){
+//Gets string input.
+std::string gettingStringInput(bool &quit){
 	StringInput strIn;
 	bool end = false;
-
+	int inputType = 0;
 	while(!end && !quit){
 		while(SDL_PollEvent(&event)){
 			if(event.type == SDL_QUIT){
 				quit = true;
 			}
 			if(event.type == SDL_KEYDOWN){
-				int temp = strIn.get_input(event);
-				if(temp == 1){
+				int inputType = strIn.get_input(event);
+				if(inputType == 1){
 					SDL_FreeSurface(strIn.textInput);
 					strIn.textInput = TTF_RenderText_Solid(font, strIn.getStr().c_str(), textColor);
 					std::cout << "Hey" << std::endl;
 				}
-				if(temp == 2){
-					background = load_image(strIn.getStr());
+				if(inputType == 2){
 					end = true;
 				}
 			}
@@ -187,6 +193,8 @@ void loadBackground(bool &quit){
 			std::cout << "hey there" << std::endl;
 		}
 	}
+
+	return strIn.getStr();
 }
 
 //Used to handle panning the screen.
@@ -216,8 +224,8 @@ void handle_pan(){
 			//Checks to pan down.
 			if(y > SCREEN_HEIGHT*.8){
 				posOffset.y -= 1;
-				if(posOffset.y < (background->h * -1) + SCREEN_WIDTH){
-					posOffset.y = (background->h * -1) + SCREEN_WIDTH;
+				if(posOffset.y < (background->h * -1) + SCREEN_HEIGHT){
+					posOffset.y = (background->h * -1) + SCREEN_HEIGHT;
 				}
 			}
 			//Checks to pan up.
@@ -261,26 +269,58 @@ int main(int argc, char* argv[]){
 					int x = event.button.x;
 					int y = event.button.y;
 					
+					//The save function writes the contents of the vector of Sprites to the specified file.
 					if(buttonArray[0].check_click(x, y)){
-						writeToFile("level.txt", spriteVec);
+						std::string stringIn = gettingStringInput(quit);
+						if(stringIn != "")
+							writeToFile(stringIn, spriteVec);
 					}
 					
 
 					//Checks for a button click.
 					if(buttonArray[1].check_click(x, y)){
-						loadBackground(quit);
+						std::string stringIn = gettingStringInput(quit);
+						background = load_image(stringIn);
+						if(background != NULL){
+							currBackground = stringIn;
+							currType = "Background";
+						}
+					}
+
+					if(buttonArray[2].check_click(x, y)){
+						std::string stringIn = gettingStringInput(quit);
+						testSurface = load_image(stringIn);
+						if(testSurface != NULL){
+							currFile = stringIn;
+							currType = "Object";
+						}
+					}
+
+					if(buttonArray[3].check_click(x, y)){
+						std::string stringIn = gettingStringInput(quit);
+						testSurface = load_image(stringIn);
+						if(testSurface != NULL){
+							currFile = stringIn;
+							currType = "Enemy";
+						}
 					}
 
 					//Creates a new sprite object if the click was not on the menubar.
-					if(y > yMenuOffset){
+					if(y > yMenuOffset && currFile != ""){
 						Sprites temp;
-						temp.spriteSurface = load_image("res/pumpkin.png");
+						temp.spriteSurface = load_image(currFile);
 						temp.box.w = temp.spriteSurface->w;
 						temp.box.h = temp.spriteSurface->h;
-						temp.box.x = (x + (posOffset.x * -1)) - temp.box.w/2;
-						temp.box.y = (y + (posOffset.y * -1)) - temp.box.h/2;
-						temp.type = "player";
-						temp.fromFile = "res/pumpkin.png";
+						temp.box.x = (x + (posOffset.x * -1))/16 * 16;
+						temp.box.y = (y + (posOffset.y * -1))/16 * 16;
+
+						temp.clip.x = 0;
+						temp.clip.y = 0;
+						temp.clip.w = 32;
+						temp.clip.h = 32;
+
+						temp.type = currType;
+						temp.fromFile = currFile;
 						
 						spriteVec.push_back(temp);
 					}
@@ -301,7 +341,7 @@ int main(int argc, char* argv[]){
 
 		//Displays the sprites to the screen.
 		for(int i = 0; i < spriteVec.size(); i++){
-			apply_surface_wOffset(spriteVec[i].box.x, spriteVec[i].box.y, spriteVec[i].spriteSurface, screen);
+			apply_surface_wOffset(spriteVec[i].box.x, spriteVec[i].box.y, spriteVec[i].spriteSurface, screen, &spriteVec[i].clip);
 		}
 
 		//Displays a white bar across the top of the screen for the menu bar.
