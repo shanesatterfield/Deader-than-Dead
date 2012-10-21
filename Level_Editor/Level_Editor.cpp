@@ -22,11 +22,16 @@ SDL_Event event;
 TTF_Font* font = NULL;
 SDL_Color textColor = {0,0,0};
 
+//Number of buttons and the button array declaration.
 const int BUTTONSIZE = 4;
 Button buttonArray[BUTTONSIZE];
 
+//Offset for the menu.
 const int yMenuOffset = 18;
+//Vector of the sprites used.
 std::vector<Sprites> spriteVec;
+//Vector to hold the offset of the panning and scrolling.
+SDL_Rect posOffset;
 
 SDL_Surface* load_image(std::string filename){
 	SDL_Surface* loadedImage = NULL;
@@ -70,7 +75,16 @@ void apply_surface(int x, int y, SDL_Surface* source, SDL_Surface *destination){
 	SDL_BlitSurface(source, NULL, destination, &offset);
 }
 
+//Apply a surface, but with the offsets built in.
+void apply_surface_wOffset(int x, int y, SDL_Surface* source, SDL_Surface *destination){
+	SDL_Rect offset;
+	offset.x = x + posOffset.x;
+	offset.y = y + posOffset.y;
+	SDL_BlitSurface(source, NULL, destination, &offset);
+}
+
 void cleanup(){
+	//Frees the sprites.
 	for(int i = 0; i < spriteVec.size(); i++){
 		SDL_FreeSurface(spriteVec[i].spriteSurface);
 	}
@@ -80,6 +94,7 @@ void cleanup(){
 	SDL_Quit();
 }
 
+//Initializes the buttons.
 bool initButtons(){
 	buttonArray[0].message = TTF_RenderText_Solid(font, "Save", textColor);
 	buttonArray[0].box.x = 25;
@@ -113,18 +128,33 @@ bool initButtons(){
 
 	return true;
 }
-/*
+
+//Writes the position of the sprites to the file.
 bool writeToFile(std::string filename, std::vector<Sprites> vec){
 	bool bl = false;
-	ofstream file(filename.c_str());
+	std::ofstream file;
+	file.open(filename.c_str());
 	if(file.is_open()){
 		bl = true;
+
+		if(background != NULL){
+			file << "res/background2.png" << '\n';
+		}
+		for(int i = 0; i < spriteVec.size(); i++){
+			file << spriteVec[i].box.x << " ";
+			file << spriteVec[i].box.y << " ";
+			file << spriteVec[i].box.w << " ";
+			file << spriteVec[i].box.h << " ";
+			file << spriteVec[i].type << " ";
+			file << spriteVec[i].fromFile << '\n';
+		}
+
 		file.close();
 	}
 	return bl;
 }
-*/
 
+//Gets string input and tries to load an image into the background surface if given a proper path.
 void loadBackground(bool &quit){
 	StringInput strIn;
 	bool end = false;
@@ -159,6 +189,48 @@ void loadBackground(bool &quit){
 	}
 }
 
+//Used to handle panning the screen.
+void handle_pan(){
+	int x = event.button.x;
+	int y = event.button.y;
+
+	//Checks if the mouse is on the window.
+	if(x > 0 && x < SCREEN_WIDTH && y > 0 && y < SCREEN_HEIGHT){
+
+		if(background != NULL){
+			//Checks to pan right.
+			if(x > SCREEN_WIDTH*.8){
+				posOffset.x -= 1;
+				if(posOffset.x < (background->w * -1) + SCREEN_WIDTH){
+					posOffset.x = (background->w * -1) + SCREEN_WIDTH;
+				}
+			}
+			//Checks to pan left.
+			else if(x < SCREEN_WIDTH*.2){
+				posOffset.x += 1;
+				if(posOffset.x > 0){
+					posOffset.x = 0;
+				}
+			}
+
+			//Checks to pan down.
+			if(y > SCREEN_HEIGHT*.8){
+				posOffset.y -= 1;
+				if(posOffset.y < (background->h * -1) + SCREEN_WIDTH){
+					posOffset.y = (background->h * -1) + SCREEN_WIDTH;
+				}
+			}
+			//Checks to pan up.
+			else if(y < SCREEN_HEIGHT*.2){
+				posOffset.y += 1;
+				if(posOffset.y > 0){
+					posOffset.y = 0;
+				}
+			}
+		}
+	}
+}
+
 int main(int argc, char* argv[]){
 	bool quit = false;
 
@@ -168,6 +240,16 @@ int main(int argc, char* argv[]){
 		return 1;
 	if(initButtons() == false)
 		return 1;
+
+	//Sets up the location of the menu bar.
+	SDL_Rect menuBar;
+	menuBar.x = 0;
+	menuBar.y = 0;
+	menuBar.w = SCREEN_WIDTH;
+	menuBar.h = buttonArray[0].message->h;
+
+	//Fills the menuBar rect with white.
+	SDL_FillRect(screen, &menuBar, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
 	
 	while(!quit){
 		while(SDL_PollEvent(&event)){
@@ -178,23 +260,25 @@ int main(int argc, char* argv[]){
 				if(event.button.button == SDL_BUTTON_LEFT){
 					int x = event.button.x;
 					int y = event.button.y;
-					bool bl = false;
-					/*
+					
 					if(buttonArray[0].check_click(x, y)){
-						writeToFile(filename, spriteVec);
+						writeToFile("level.txt", spriteVec);
 					}
-					*/
+					
+
+					//Checks for a button click.
 					if(buttonArray[1].check_click(x, y)){
 						loadBackground(quit);
-						bl = true;
 					}
-					if(!bl){
+
+					//Creates a new sprite object if the click was not on the menubar.
+					if(y > yMenuOffset){
 						Sprites temp;
 						temp.spriteSurface = load_image("res/pumpkin.png");
 						temp.box.w = temp.spriteSurface->w;
 						temp.box.h = temp.spriteSurface->h;
-						temp.box.x = x - temp.box.w/2;
-						temp.box.y = y - temp.box.h/2;
+						temp.box.x = (x + (posOffset.x * -1)) - temp.box.w/2;
+						temp.box.y = (y + (posOffset.y * -1)) - temp.box.h/2;
 						temp.type = "player";
 						temp.fromFile = "res/pumpkin.png";
 						
@@ -203,19 +287,29 @@ int main(int argc, char* argv[]){
 				}
 			}
 		}
+		
+		//Used to pan the screen.
+		handle_pan();
 
+		//Wipes the screen.
 		SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
 
+		//Displays the background if one was loaded.
+		if(background != NULL){
+			apply_surface_wOffset(0, yMenuOffset, background, screen);
+		}
+
+		//Displays the sprites to the screen.
+		for(int i = 0; i < spriteVec.size(); i++){
+			apply_surface_wOffset(spriteVec[i].box.x, spriteVec[i].box.y, spriteVec[i].spriteSurface, screen);
+		}
+
+		//Displays a white bar across the top of the screen for the menu bar.
+		SDL_FillRect(screen, &menuBar, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
+
+		//Displays the buttons ontop of the menu bar.
 		for(int i = 0; i < BUTTONSIZE; i++){
 			apply_surface(buttonArray[i].box.x, buttonArray[i].box.y, buttonArray[i].message, screen);
-		}
-
-		if(background != NULL){
-			apply_surface(0,yMenuOffset, background, screen);
-		}
-
-		for(int i = 0; i < spriteVec.size(); i++){
-			apply_surface(spriteVec[i].box.x, spriteVec[i].box.y, spriteVec[i].spriteSurface, screen);
 		}
 
 		if(SDL_Flip(screen) == -1)

@@ -1,0 +1,5 @@
+res/background2.png
+176 204 128 128 player res/pumpkin.png
+397 151 128 128 player res/pumpkin.png
+533 369 128 128 player res/pumpkin.png
+245 398 128 128 player res/pumpkin.png
