@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <string>
+#include <windows.h>
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -59,7 +60,6 @@ void cleanup(){
 
 int main(int argc, char* argv[]){
 	bool quit = false;
-
 	if(init() == false)
 		return 1;
 	if(load_files() == false)
@@ -76,7 +76,6 @@ int main(int argc, char* argv[]){
 
 		if(SDL_Flip(screen) == -1)
 			return 1;
-
 	}
 
 	cleanup();

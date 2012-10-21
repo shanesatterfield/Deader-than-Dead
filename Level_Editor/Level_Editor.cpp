@@ -348,10 +348,16 @@ int main(int argc, char* argv[]){
 		}
 
 		//Displays a white bar across the top of the screen for the menu bar.
-		SDL_FillRect(screen, &menuBar, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
+		SDL_FillRect(screen, &menuBar, SDL_MapRGB(screen->format, 0x3F, 0x00, 0x1F));
 
 		//Displays the buttons ontop of the menu bar.
 		for(int i = 0; i < BUTTONSIZE; i++){
+			SDL_Rect buttonBackground;
+			buttonBackground.x = buttonArray[i].box.x - 5;
+			buttonBackground.y = buttonArray[i].box.y;
+			buttonBackground.w = buttonArray[i].box.w + 10;
+			buttonBackground.h = buttonArray[i].box.h + 1;
+			SDL_FillRect(screen, &buttonBackground, SDL_MapRGB(screen->format, 0xFF, 0x3F, 0x5F));
 			apply_surface(buttonArray[i].box.x, buttonArray[i].box.y, buttonArray[i].message, screen);
 		}
 

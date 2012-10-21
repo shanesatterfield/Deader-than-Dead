@@ -1,9 +1,4 @@
 res/background2.png
-w[pkd[kwqd
-w[pdkqwkd[pkw[pkp[qw
-dwqkdp[qkw[
-pdkq
-wdqwkdpk[
 352 192 100 143 Enemy res/DeathSprites.png
 144 192 100 143 Enemy res/DeathSprites.png
 320 112 100 143 Enemy res/DeathSprites.png
