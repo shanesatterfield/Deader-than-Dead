@@ -1,39 +1,4 @@
-res/background2.png
-w[pkd[kwqd
-w[pdkqwkd[pkw[pkp[qw
-dwqkdp[qkw[
-pdkq
-wdqwkdpk[
-352 192 100 143 Enemy res/DeathSprites.png
-144 192 100 143 Enemy res/DeathSprites.png
-320 112 100 143 Enemy res/DeathSprites.png
-656 240 100 143 Enemy res/DeathSprites.png
-608 448 100 143 Enemy res/DeathSprites.png
-368 448 100 143 Enemy res/DeathSprites.png
-256 384 100 143 Enemy res/DeathSprites.png
-512 240 100 143 Enemy res/DeathSprites.png
-528 128 100 143 Enemy res/DeathSprites.png
-272 80 100 143 Enemy res/DeathSprites.png
-432 320 128 128 Enemy res/pumpkin.png
-304 272 128 128 Enemy res/pumpkin.png
-256 160 128 128 Enemy res/pumpkin.png
-464 128 128 128 Enemy res/pumpkin.png
-608 176 128 128 Enemy res/pumpkin.png
-560 432 128 128 Enemy res/pumpkin.png
-288 416 128 128 Enemy res/pumpkin.png
-304 208 128 128 Enemy res/pumpkin.png
-592 224 128 128 Enemy res/pumpkin.png
-592 336 128 128 Enemy res/pumpkin.png
-496 384 128 128 Enemy res/pumpkin.png
-320 400 128 128 Enemy res/pumpkin.png
-112 288 128 128 Enemy res/pumpkin.png
-1072 352 128 128 Background res/pumpkin.png
-1200 528 128 128 Background res/pumpkin.png
-1344 704 128 128 Background res/pumpkin.png
-1440 864 128 128 Background res/pumpkin.png
-1440 976 128 128 Background res/pumpkin.png
-1184 960 128 128 Background res/pumpkin.png
-1136 928 128 128 Background res/pumpkin.png
-960 864 128 128 Background res/pumpkin.png
-496 1104 128 128 Background res/pumpkin.png
-224 784 128 128 Background res/pumpkin.png
+736 0 32 32 Enemy res/death32.png
+560 0 32 32 Enemy res/death32.png
+352 0 32 32 Enemy res/death32.png
+112 0 32 32 Enemy res/death32.png
