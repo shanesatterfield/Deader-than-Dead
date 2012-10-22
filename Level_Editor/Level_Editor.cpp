@@ -150,7 +150,7 @@ bool writeToFile(std::string filename, std::vector<Sprites> vec){
 		}
 		for(int i = 0; i < spriteVec.size(); i++){
 			file << spriteVec[i].box.x << " ";
-			file << spriteVec[i].box.y << " ";
+			file << (spriteVec[i].box.y - yMenuOffset) << " ";
 			file << spriteVec[i].box.w << " ";
 			file << spriteVec[i].box.h << " ";
 			file << spriteVec[i].type << " ";
@@ -316,6 +316,7 @@ int main(int argc, char* argv[]){
 						temp.box.h = temp.spriteSurface->h;
 						temp.box.x = (x + (posOffset.x * -1))/16 * 16;
 						temp.box.y = (y + (posOffset.y * -1))/16 * 16;
+						//temp.box.y += yMenuOffset;
 
 						temp.clip.x = 0;
 						temp.clip.y = 0;
