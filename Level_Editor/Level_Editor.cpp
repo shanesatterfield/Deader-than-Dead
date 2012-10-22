@@ -177,7 +177,6 @@ std::string gettingStringInput(bool &quit){
 				if(inputType == 1){
 					SDL_FreeSurface(strIn.textInput);
 					strIn.textInput = TTF_RenderText_Solid(font, strIn.getStr().c_str(), textColor);
-					std::cout << "Hey" << std::endl;
 				}
 				if(inputType == 2){
 					end = true;
@@ -191,7 +190,7 @@ std::string gettingStringInput(bool &quit){
 		std::cout << strIn.getStr() << std::endl;
 
 		if(SDL_Flip(screen) == -1){
-			std::cout << "hey there" << std::endl;
+			std::cout << 1 << std::endl;
 		}
 	}
 
