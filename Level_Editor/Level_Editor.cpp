@@ -187,7 +187,6 @@ std::string gettingStringInput(bool &quit){
 		SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
 
 		strIn.display(SCREEN_WIDTH, SCREEN_HEIGHT, yMenuOffset, screen);
-		std::cout << strIn.getStr() << std::endl;
 
 		if(SDL_Flip(screen) == -1){
 			std::cout << 1 << std::endl;
