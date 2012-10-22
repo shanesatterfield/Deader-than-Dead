@@ -20,4 +20,13 @@ public:
 	void moveBox(int xShift, int yShift);
 	//Sets the x and y position of the position and collision box.
 	void setBoxPosition(int xShift, int yShift);
+
+	//The update function checks and does attribute/state changes. Reads in the amount of milleseconds elapsed since the last update cycle. -JVL
+	virtual void update(Uint32);
+	//This update will blit the object on the screen. -JVL
+	virtual void draw(SDL_Surface*);
+	//Cleans any surfaces or allocated memory
+	virtual void cleanLoop();
+	//This function will deallcoate as much memory as possible. Best when called to destroy itself.
+	virtual void cleanUp();
 };

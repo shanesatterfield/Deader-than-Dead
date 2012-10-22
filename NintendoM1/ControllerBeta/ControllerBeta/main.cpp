@@ -6,12 +6,14 @@
 #include "Controller.h"
 #include "KeyboardMouse.h"
 #include "Animation.h"
-#include "Death.h"
-#include "TestMonster.h"
+#include "Units/Death.h"
+#include "Units/TestMonster.h"
 #include "Clock.h"
+#include "Collision/SpatialHashing.h"
 #include <string>
 #include <stdlib.h>
 #include <sstream>
+#include <vector>
 
 using namespace std;
 
@@ -19,6 +21,8 @@ using namespace std;
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 768;
 const int SCREEN_BPP = 32;
+const int SPATIAL_HASHING_CELL_SIZE = 128;
+
 
 const int SPEED = 400; //pixels per second
 
@@ -45,6 +49,8 @@ Death * deathPlayer;
 TestMonster * testMonster;
 Clock clock;
 SDL_Surface *blackTest = NULL;
+vector<GameObject*> listOfGameObjects;
+static SpatialHashing spatialHashing(SCREEN_WIDTH, SCREEN_HEIGHT, SPATIAL_HASHING_CELL_SIZE);
 
 SDL_Surface *load_image( std::string filename )
 {
@@ -135,6 +141,11 @@ bool init()
 	//Initialize Death
 	deathPlayer = new Death(700, 700, load_image( "Sprites//giraffe.png" ), controller);
 	testMonster = new TestMonster(load_image( "Sprites//giraffe.png" ));
+	
+	//Add gameobjects
+	listOfGameObjects.push_back(deathPlayer);
+	listOfGameObjects.push_back(testMonster);
+
 
     //Set the window caption
     SDL_WM_SetCaption( "Controller BETA Joshua Liong", NULL );
@@ -251,6 +262,9 @@ int main( int argc, char* args[] )
 				}
 			}
 
+			//**********Gameobject/memory handling*********************
+			spatialHashing.update(listOfGameObjects);
+			//*********************************************************
 			controller->update();		
 
 			if(controller->releaseCancel())
@@ -258,25 +272,30 @@ int main( int argc, char* args[] )
 				quit = true; //ESC terminates the program
 			}
 
-			
+			int numTotalObjects = listOfGameObjects.size();
+			for(int i = 0; i < numTotalObjects; i++)
+				listOfGameObjects[i]->update(timeElapsedMs);
 
 			animationTest->update(timeElapsedMs);
-			deathPlayer->update(timeElapsedMs);
-			testMonster->update(timeElapsedMs);
+			//deathPlayer->update(timeElapsedMs);
+			//testMonster->update(timeElapsedMs);
 			animationTest->draw(xPos,yPos, screen); 
 			deathPlayer->draw(screen);
 			testMonster->draw(screen);
 
-			SDL_Rect playerLocation;
-			SDL_Rect collisionBoxClip;
-			collisionBoxClip.x = 0; 
-			collisionBoxClip.y = 0; 
-			collisionBoxClip.w = deathPlayer->collisionBox.w;
-			collisionBoxClip.h = deathPlayer->collisionBox.h;
-			playerLocation.x = deathPlayer->collisionBox.x;
-			playerLocation.y = deathPlayer->collisionBox.y;
-			SDL_BlitSurface(blackTest, &collisionBoxClip,
-				screen, &playerLocation);
+			if(true) //DEBUG BLOCK. It should have a square at the center of the sprite.
+			{
+				SDL_Rect playerLocation;
+				SDL_Rect collisionBoxClip;
+				collisionBoxClip.x = 0; 
+				collisionBoxClip.y = 0; 
+				collisionBoxClip.w = deathPlayer->collisionBox.w;
+				collisionBoxClip.h = deathPlayer->collisionBox.h;
+				playerLocation.x = deathPlayer->collisionBox.x;
+				playerLocation.y = deathPlayer->collisionBox.y;
+				SDL_BlitSurface(blackTest, &collisionBoxClip,
+					screen, &playerLocation);
+			}
 
 			//Render the text
 			std::string s;
@@ -301,6 +320,10 @@ int main( int argc, char* args[] )
 			{
 				return 1;
 			}
+
+			//Free any surfaces or anything that may be tacked again
+			SDL_FreeSurface( message );
+    
 		}//end clockTick check
 	}
     //Free the images and quit SDL

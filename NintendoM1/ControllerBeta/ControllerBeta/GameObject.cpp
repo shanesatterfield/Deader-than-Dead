@@ -43,3 +43,12 @@ void GameObject::setBoxPosition(int xShift, int yShift)
 	collisionBox.x = xShift + pos.w;
 	collisionBox.y = yShift + pos.h;
 }
+
+//The update function checks and does attribute/state changes. Reads in the amount of milleseconds elapsed since the last update cycle. -JVL
+void GameObject::update(Uint32){};
+//This update will blit the object on the screen. -JVL
+void GameObject::draw(SDL_Surface*){};
+//Cleans any surfaces or allocated memory
+void GameObject::cleanLoop(){};
+//This function will deallcoate as much memory as possible. Best when called to destroy itself.
+void GameObject::cleanUp(){};

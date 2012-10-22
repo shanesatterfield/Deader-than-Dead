@@ -1,5 +1,5 @@
 #include "Death.h"
-#include "Constants.h"
+#include "../Constants.h"
 
 #define NUM_FRAMES_X	3
 #define NUM_FRAMES_Y	5
