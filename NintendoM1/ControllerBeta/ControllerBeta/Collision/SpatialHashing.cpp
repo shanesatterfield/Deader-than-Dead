@@ -1,7 +1,7 @@
 #pragma once
 #include "SpatialHashing.h"
 #include "CollisionDetection.h"
-#include "../GameObject.h"
+#include "../GameObjects/GameObject.h"
 
 using namespace std; //I do this out of habit.
 
@@ -46,17 +46,19 @@ void SpatialHashing::checkAllBuckets()
 	for(int bucketIndex = 0; bucketIndex < numBuckets; bucketIndex++)
 	{
 		int sizeOfBucket = buckets[bucketIndex]->size();
-		for(int objIndex1 = 1; objIndex1 < sizeOfBucket; objIndex1++) //O(n^2). This could be optimized...
+		for(int objIndex1 = 0; objIndex1 < sizeOfBucket; objIndex1++) //O(n^2). This could be optimized...
 			for(int objIndex2 = 0; objIndex2 < sizeOfBucket; objIndex2++)
 			{
 				if(objIndex1 == objIndex2) continue; //no need to check self.
 				else
 				{
-					if(CollisionDetection::rectangleIntersecting( //TODO:INTERSECTION OINWE:OIFNA:OIFJS
-						((*buckets[bucketIndex])[objIndex1]->collisionBox),
-						((*buckets[bucketIndex])[objIndex2]->collisionBox)))
+					if(CollisionDetection::rectangleIntersecting(
+						(*buckets[bucketIndex])[objIndex1],
+						(*buckets[bucketIndex])[objIndex2]))
 					{
-						//Run collision detection
+						//Run collision handling
+						(*buckets[bucketIndex])[objIndex1]->checkCollisionWith(
+							(*buckets[bucketIndex])[objIndex2]);
 					}
 				}
 			}

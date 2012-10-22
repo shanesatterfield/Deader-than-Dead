@@ -3,13 +3,13 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include "SDL_ttf.h"
-#include "Controller.h"
-#include "KeyboardMouse.h"
 #include "Animation.h"
-#include "Units/Death.h"
-#include "Units/TestMonster.h"
 #include "Clock.h"
 #include "Collision/SpatialHashing.h"
+#include "Controller/Controller.h"
+#include "Controller/KeyboardMouse.h"
+#include "GameObjects/Units/Death.h"
+#include "GameObjects/Units/TestMonster.h"
 #include <string>
 #include <stdlib.h>
 #include <sstream>

@@ -1,7 +1,7 @@
 #pragma once 
 
 #include <vector>
-#include "../GameObject.h"
+#include "../GameObjects/GameObject.h"
 
 using namespace std;
 

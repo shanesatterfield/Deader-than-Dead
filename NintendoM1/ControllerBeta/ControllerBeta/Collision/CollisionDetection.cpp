@@ -10,3 +10,9 @@ bool CollisionDetection::rectangleIntersecting(SDL_Rect rect1, SDL_Rect rect2)
 	else
 		return true;
 }
+
+bool CollisionDetection::rectangleIntersecting(GameObject * g1, GameObject * g2)
+{
+	//Get the rectangles and then go thru rectangle intersection check.
+	return CollisionDetection::rectangleIntersecting(g1->collisionBox, g2->collisionBox);
+}

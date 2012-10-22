@@ -16,60 +16,69 @@
     <Filter Include="Resource Files\Sprites">
       <UniqueIdentifier>{6c795eae-24bd-4135-93c3-6c232d81e766}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Units">
-      <UniqueIdentifier>{f154de2a-6a4e-416b-aa74-3cd6f2877446}</UniqueIdentifier>
+    <Filter Include="Header Files\Collision">
+      <UniqueIdentifier>{ece093be-a18b-484c-85ce-89b3e25c4131}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Units">
-      <UniqueIdentifier>{ff3a2436-8201-4c4f-b217-f6eadad36521}</UniqueIdentifier>
+    <Filter Include="Source Files\Collision">
+      <UniqueIdentifier>{116aaca7-b2a1-4a1d-b632-a16745d640f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Controller">
+      <UniqueIdentifier>{1a0fd456-991d-4a32-adba-0df9a60d9e39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Controller">
+      <UniqueIdentifier>{4d9dd5c8-c08f-4814-a213-49f216cebabf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects">
+      <UniqueIdentifier>{5afbe70c-5f17-48a6-a098-59bb5d618ad6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects">
+      <UniqueIdentifier>{d6d7b9ed-a9b7-4540-b5dc-cd54178ee063}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\GameObjects\Units">
+      <UniqueIdentifier>{956d0dc0-2306-4173-a54a-619dea2e734e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\GameObjects\Units">
+      <UniqueIdentifier>{4ab328a8-1efe-4135-a5fc-8bbc517e1ea6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Controller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="KeyboardMouse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Unit.cpp">
-      <Filter>Source Files\Units</Filter>
-    </ClCompile>
-    <ClCompile Include="Death.cpp">
-      <Filter>Source Files\Units</Filter>
     </ClCompile>
     <ClCompile Include="Clock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="TestMonster.cpp">
-      <Filter>Source Files\Units</Filter>
+    <ClCompile Include="Collision\SpatialHashing.cpp">
+      <Filter>Source Files\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Collision\CollisionDetection.cpp">
+      <Filter>Source Files\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\Controller.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller\KeyboardMouse.cpp">
+      <Filter>Source Files\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Units\Unit.cpp">
+      <Filter>Source Files\GameObjects\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Units\Death.cpp">
+      <Filter>Source Files\GameObjects\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\Units\TestMonster.cpp">
+      <Filter>Source Files\GameObjects\Units</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObjects\GameObject.cpp">
+      <Filter>Source Files\GameObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Controller.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="KeyboardMouse.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Animation.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GameObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Unit.h">
-      <Filter>Header Files\Units</Filter>
-    </ClInclude>
-    <ClInclude Include="Death.h">
-      <Filter>Header Files\Units</Filter>
     </ClInclude>
     <ClInclude Include="Constants.h">
       <Filter>Header Files</Filter>
@@ -77,8 +86,32 @@
     <ClInclude Include="Clock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="TestMonster.h">
-      <Filter>Header Files\Units</Filter>
+    <ClInclude Include="Collision\CollisionDetection.h">
+      <Filter>Header Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Collision\SpatialHashing.h">
+      <Filter>Header Files\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\Controller.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller\KeyboardMouse.h">
+      <Filter>Header Files\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\GameObject.h">
+      <Filter>Header Files\GameObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Units\Death.h">
+      <Filter>Header Files\GameObjects\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Units\TestMonster.h">
+      <Filter>Header Files\GameObjects\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\Units\Unit.h">
+      <Filter>Header Files\GameObjects\Units</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObjects\ObjectType.h">
+      <Filter>Header Files\GameObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

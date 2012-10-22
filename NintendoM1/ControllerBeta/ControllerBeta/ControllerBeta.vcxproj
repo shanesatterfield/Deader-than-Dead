@@ -70,24 +70,29 @@
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="Clock.cpp" />
-    <ClCompile Include="Controller.cpp" />
-    <ClCompile Include="Death.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="KeyboardMouse.cpp" />
+    <ClCompile Include="Collision\CollisionDetection.cpp" />
+    <ClCompile Include="Collision\SpatialHashing.cpp" />
+    <ClCompile Include="Controller\Controller.cpp" />
+    <ClCompile Include="Controller\KeyboardMouse.cpp" />
+    <ClCompile Include="GameObjects\GameObject.cpp" />
+    <ClCompile Include="GameObjects\Units\Death.cpp" />
+    <ClCompile Include="GameObjects\Units\TestMonster.cpp" />
+    <ClCompile Include="GameObjects\Units\Unit.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="TestMonster.cpp" />
-    <ClCompile Include="Unit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
     <ClInclude Include="Clock.h" />
+    <ClInclude Include="Collision\CollisionDetection.h" />
+    <ClInclude Include="Collision\SpatialHashing.h" />
     <ClInclude Include="Constants.h" />
-    <ClInclude Include="Controller.h" />
-    <ClInclude Include="Death.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="KeyboardMouse.h" />
-    <ClInclude Include="TestMonster.h" />
-    <ClInclude Include="Unit.h" />
+    <ClInclude Include="Controller\Controller.h" />
+    <ClInclude Include="Controller\KeyboardMouse.h" />
+    <ClInclude Include="GameObjects\GameObject.h" />
+    <ClInclude Include="GameObjects\ObjectType.h" />
+    <ClInclude Include="GameObjects\Units\Death.h" />
+    <ClInclude Include="GameObjects\Units\TestMonster.h" />
+    <ClInclude Include="GameObjects\Units\Unit.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\..\..\Desktop\BlackTest.png" />
