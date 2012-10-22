@@ -27,7 +27,7 @@ const int BUTTONSIZE = 4;
 Button buttonArray[BUTTONSIZE];
 
 //Offset for the menu.
-const int yMenuOffset = 18;
+const int yMenuOffset = 32;
 //Vector of the sprites used.
 std::vector<Sprites> spriteVec;
 //Vector to hold the offset of the panning and scrolling.
@@ -67,7 +67,8 @@ bool init(){
 }
 
 bool load_files(){
-	font = TTF_OpenFont("res/arial.ttf", 18);
+	font = TTF_OpenFont("res/robo.ttf", yMenuOffset - 1);
+	TTF_SetFontKerning(font, true);
 	if(font == NULL)
 		return false;
 	return true;
@@ -103,27 +104,27 @@ void cleanup(){
 bool initButtons(){
 	buttonArray[0].message = TTF_RenderText_Solid(font, "Save", textColor);
 	buttonArray[0].box.x = 25;
-	buttonArray[0].box.y = 0;
+	buttonArray[0].box.y = 1;
 	buttonArray[0].box.w = buttonArray[0].message->w;
-	buttonArray[0].box.h = buttonArray[0].message->h;
+	buttonArray[0].box.h = buttonArray[0].message->h + 1;
 
 	buttonArray[1].message = TTF_RenderText_Solid(font, "Load Level", textColor);
 	buttonArray[1].box.x = 100 + buttonArray[0].box.x + buttonArray[0].box.w;
-	buttonArray[1].box.y = 0;
+	buttonArray[1].box.y = 1;
 	buttonArray[1].box.w = buttonArray[1].message->w;
-	buttonArray[1].box.h = buttonArray[1].message->h;
+	buttonArray[1].box.h = buttonArray[1].message->h + 1;
 
 	buttonArray[2].message = TTF_RenderText_Solid(font, "Objects", textColor);
 	buttonArray[2].box.x = 100 + buttonArray[1].box.x + buttonArray[1].box.w;
-	buttonArray[2].box.y = 0;
+	buttonArray[2].box.y = 1;
 	buttonArray[2].box.w = buttonArray[2].message->w;
-	buttonArray[2].box.h = buttonArray[2].message->h;
+	buttonArray[2].box.h = buttonArray[2].message->h + 1;
 
 	buttonArray[3].message = TTF_RenderText_Solid(font, "Enemies", textColor);
 	buttonArray[3].box.x = 100 + buttonArray[2].box.x + buttonArray[2].box.w;
-	buttonArray[3].box.y = 0;
+	buttonArray[3].box.y = 1;
 	buttonArray[3].box.w = buttonArray[3].message->w;
-	buttonArray[3].box.h = buttonArray[3].message->h;
+	buttonArray[3].box.h = buttonArray[3].message->h + 1;
 
 	for(int i = 0; i < BUTTONSIZE; i++){
 		if(buttonArray[i].message == NULL){
@@ -254,7 +255,7 @@ int main(int argc, char* argv[]){
 	menuBar.x = 0;
 	menuBar.y = 0;
 	menuBar.w = SCREEN_WIDTH;
-	menuBar.h = buttonArray[0].message->h;
+	menuBar.h = buttonArray[0].message->h + 1;
 
 	//Fills the menuBar rect with white.
 	SDL_FillRect(screen, &menuBar, SDL_MapRGB(screen->format, 0xFF, 0xFF, 0xFF));
@@ -348,16 +349,16 @@ int main(int argc, char* argv[]){
 		}
 
 		//Displays a white bar across the top of the screen for the menu bar.
-		SDL_FillRect(screen, &menuBar, SDL_MapRGB(screen->format, 0x3F, 0x00, 0x1F));
+		SDL_FillRect(screen, &menuBar, SDL_MapRGB(screen->format, 0x33, 0x00, 0x1F));
 
 		//Displays the buttons ontop of the menu bar.
 		for(int i = 0; i < BUTTONSIZE; i++){
 			SDL_Rect buttonBackground;
 			buttonBackground.x = buttonArray[i].box.x - 5;
-			buttonBackground.y = buttonArray[i].box.y;
+			buttonBackground.y = buttonArray[i].box.y - 1;
 			buttonBackground.w = buttonArray[i].box.w + 10;
-			buttonBackground.h = buttonArray[i].box.h + 1;
-			SDL_FillRect(screen, &buttonBackground, SDL_MapRGB(screen->format, 0xFF, 0x3F, 0x5F));
+			buttonBackground.h = buttonArray[i].box.h;
+			SDL_FillRect(screen, &buttonBackground, SDL_MapRGB(screen->format, 0xFF, 0x1F, 0x5F));
 			apply_surface(buttonArray[i].box.x, buttonArray[i].box.y, buttonArray[i].message, screen);
 		}
 
