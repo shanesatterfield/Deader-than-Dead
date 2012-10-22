@@ -5,6 +5,7 @@
 #include "SDL_ttf.h"
 #include "Animation.h"
 #include "Clock.h"
+#include "GameObjectManager.h"
 #include "Collision/SpatialHashing.h"
 #include "Controller/Controller.h"
 #include "Controller/KeyboardMouse.h"
@@ -51,6 +52,7 @@ Clock clock;
 SDL_Surface *blackTest = NULL;
 vector<GameObject*> listOfGameObjects;
 static SpatialHashing spatialHashing(SCREEN_WIDTH, SCREEN_HEIGHT, SPATIAL_HASHING_CELL_SIZE);
+static GameObjectManager gameObjectManager;
 
 SDL_Surface *load_image( std::string filename )
 {
@@ -138,14 +140,13 @@ bool init()
 	if(!clock.init()) //initialize the clock.
 		return false;
 
-	//Initialize Death
+	//Initialize GameObjects
 	deathPlayer = new Death(700, 700, load_image( "Sprites//giraffe.png" ), controller);
 	testMonster = new TestMonster(load_image( "Sprites//giraffe.png" ));
-	
-	//Add gameobjects
-	listOfGameObjects.push_back(deathPlayer);
-	listOfGameObjects.push_back(testMonster);
 
+	//Add gameobjects
+	gameObjectManager.addGameObject(deathPlayer);
+	gameObjectManager.addGameObject(testMonster);
 
     //Set the window caption
     SDL_WM_SetCaption( "Controller BETA Joshua Liong", NULL );
@@ -263,7 +264,8 @@ int main( int argc, char* args[] )
 			}
 
 			//**********Gameobject/memory handling*********************
-			spatialHashing.update(listOfGameObjects);
+			gameObjectManager.update(timeElapsedMs);
+			spatialHashing.update(gameObjectManager.activeGameObjects);
 			//*********************************************************
 			controller->update();		
 
@@ -280,8 +282,9 @@ int main( int argc, char* args[] )
 			//deathPlayer->update(timeElapsedMs);
 			//testMonster->update(timeElapsedMs);
 			animationTest->draw(xPos,yPos, screen); 
-			deathPlayer->draw(screen);
-			testMonster->draw(screen);
+			gameObjectManager.draw(screen);
+			//deathPlayer->draw(screen);
+			//testMonster->draw(screen);
 
 			if(true) //DEBUG BLOCK. It should have a square at the center of the sprite.
 			{
