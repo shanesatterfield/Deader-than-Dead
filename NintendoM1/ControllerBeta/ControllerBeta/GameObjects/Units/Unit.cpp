@@ -8,6 +8,8 @@ Unit::Unit(int xPosInit , int yPosInit , int widthCollision , int heightCollisio
 	this->sprite.init(numSheetColumns, numSheetRows, frameWidth, frameHeight, spriteSheet);
 }
 
+Unit::~Unit() {}
+
 void Unit::update(Uint32 timeElapsedMs){/*Please override*/}
 
 void Unit::draw(SDL_Surface *destination)

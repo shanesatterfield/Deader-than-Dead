@@ -2,6 +2,11 @@
 
 Animation::Animation(){}
 
+Animation::~Animation()
+{
+	SDL_FreeSurface(spriteSheet);
+}
+
 bool Animation::init(int numColumns, int numRows, int frameWidth, int frameHeight, SDL_Surface * spriteSheet)
 {
 	this->spriteSheet = spriteSheet;
@@ -58,6 +63,11 @@ bool Animation::update(Uint32 timeElapsedMs)
 		}
 	}
 	return frameCycleCompleted; //Returns when the final frame was hit. Useful for single-run thru rows.
+}
+
+void Animation::cleanUp()
+{
+	SDL_FreeSurface(spriteSheet);
 }
 
 SDL_Rect Animation::accessFrame(int row, int col)

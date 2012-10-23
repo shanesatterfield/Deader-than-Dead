@@ -28,17 +28,9 @@ SpatialHashing::SpatialHashing(int mapWidth, int mapHeight, int squareCellSize)
 
 void SpatialHashing::update(vector<GameObject*> masterList)
 {
-	//TODO Outside: GameObjectManager deallocates gameobjects.
-
-	//TODO Outside: Gameobject adds new gameobjects.
-
 	clearAllBuckets(); //Clears buckets
-	
-	//Hashes to buckets
-	hashToBuckets(masterList);
-
-	//Checks all buckets for collisions
-	checkAllBuckets();
+	hashToBuckets(masterList);//Hashes to buckets
+	checkAllBuckets();	//Checks all buckets for collisions
 }
 
 void SpatialHashing::checkAllBuckets()

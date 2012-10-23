@@ -10,7 +10,7 @@ class GameObjectManager
 {
 public:
 	//Contains the addresses of newly created objects to be added to the world
-	vector<GameObject*> queuedNewGameObjects;
+	static vector<GameObject*> queuedNewGameObjects;
 	//Contains the addresses of active game objects updating/drawing in the world.
 	vector<GameObject*> activeGameObjects;
 

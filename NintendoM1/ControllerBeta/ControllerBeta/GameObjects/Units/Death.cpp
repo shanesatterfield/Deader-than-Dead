@@ -2,7 +2,7 @@
 #include "../../Constants.h"
 
 #define NUM_FRAMES_X	3
-#define NUM_FRAMES_Y	5
+#define NUM_FRAMES_Y	4
 
 Death::Death(int xPos, int yPos, SDL_Surface* spriteSheet, Controller* controller)
 	: Unit(xPos, yPos, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, 
@@ -35,10 +35,10 @@ void Death::handleMovement(Uint32 timeElapsedMs)
 
 void Death::handleLook()
 {
-	if(stayedInSamePosition())
-		this->sprite.curRow = Animation::AnimStates::Idle;
-	else
-	{
+	//if(stayedInSamePosition())
+	//	this->sprite.curRow = Animation::AnimStates::Idle;
+	//else
+	//{
 		//temporary variable. 
 		const int OFFSET = 0;
 
@@ -56,7 +56,7 @@ void Death::handleLook()
 					this->sprite.curRow = Animation::AnimStates::Down; //angle (135 thru 45)
 				else
 					this->sprite.curRow = Animation::AnimStates::Right; //angle (45 thru -45)
-	}
+	//}
 }
 
 void Death::checkCollisionWith(GameObject * otherObject)
@@ -64,7 +64,7 @@ void Death::checkCollisionWith(GameObject * otherObject)
 	switch(otherObject->type)
 	{
 	case ObjectType::Enemy:
-		otherObject->setBoxPosition(100, 368);
+		otherObject->deallocate = true;
 		break;
 	default:
 		break;

@@ -9,6 +9,7 @@
 #include "Collision/SpatialHashing.h"
 #include "Controller/Controller.h"
 #include "Controller/KeyboardMouse.h"
+#include "GameObjects/Units/Bat.h"
 #include "GameObjects/Units/Death.h"
 #include "GameObjects/Units/TestMonster.h"
 #include <string>
@@ -47,7 +48,6 @@ SDL_Color textColor = { 0, 0, 0 };
 Controller * controller;
 Animation * animationTest;
 Death * deathPlayer;
-TestMonster * testMonster;
 Clock clock;
 SDL_Surface *blackTest = NULL;
 vector<GameObject*> listOfGameObjects;
@@ -69,7 +69,7 @@ SDL_Surface *load_image( std::string filename )
     if( loadedImage != NULL )
     {
         //Create an optimized surface
-        optimizedImage = SDL_DisplayFormat( loadedImage );
+        optimizedImage = SDL_DisplayFormatAlpha( loadedImage );
 
         //Free the old surface
         SDL_FreeSurface( loadedImage );
@@ -141,12 +141,20 @@ bool init()
 		return false;
 
 	//Initialize GameObjects
-	deathPlayer = new Death(700, 700, load_image( "Sprites//giraffe.png" ), controller);
-	testMonster = new TestMonster(load_image( "Sprites//giraffe.png" ));
+	deathPlayer = new Death(700, 700, load_image( "Sprites//deathSprites.png" ), controller);
 
 	//Add gameobjects
 	gameObjectManager.addGameObject(deathPlayer);
-	gameObjectManager.addGameObject(testMonster);
+	const int NUMBER_OF_MONSTERS = 1000;
+	for(int index = 0; index < NUMBER_OF_MONSTERS; index++)
+	{
+		//There should probably be a central location to store the images instead of loading
+		//the texture into each one...
+		Unit * newTest = new Bat(load_image( "Sprites//enemySprites.png" ));
+		newTest->setPosition((25 * index) % 1024, (index * 25) % 750);
+
+		gameObjectManager.addGameObject(newTest);
+	}
 
     //Set the window caption
     SDL_WM_SetCaption( "Controller BETA Joshua Liong", NULL );
@@ -247,7 +255,7 @@ int main( int argc, char* args[] )
 		if(clock.allowTick()) //time based stuff goes in here.
 		{
 			//Fill/Reset the screen 
-			SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0, 0, 0xFF ) );
+			SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xCD, 0x85, 0x3F ) );
 
 			//Timer
 			Uint32 timeElapsedMs = clock.timeElapsed;
@@ -275,18 +283,12 @@ int main( int argc, char* args[] )
 			}
 
 			int numTotalObjects = listOfGameObjects.size();
-			for(int i = 0; i < numTotalObjects; i++)
-				listOfGameObjects[i]->update(timeElapsedMs);
-
+			
 			animationTest->update(timeElapsedMs);
-			//deathPlayer->update(timeElapsedMs);
-			//testMonster->update(timeElapsedMs);
 			animationTest->draw(xPos,yPos, screen); 
 			gameObjectManager.draw(screen);
-			//deathPlayer->draw(screen);
-			//testMonster->draw(screen);
 
-			if(true) //DEBUG BLOCK. It should have a square at the center of the sprite.
+			if(false) //DEBUG BLOCK. It should have a square at the center of the sprite.
 			{
 				SDL_Rect playerLocation;
 				SDL_Rect collisionBoxClip;

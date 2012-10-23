@@ -6,6 +6,8 @@ class GameObject
 public:
 	//Constructor used to define the collision box of this gameobject. Sadly they are all boxes...
 	GameObject(int xPos, int yPos, int collisionX, int collisionY, int boxOffestX, int boxOffsetY);
+	//Virtual deconstructor. Needed so that the child classes can be destroyed when in a generic list.
+	virtual ~GameObject();
 	//The collision box to be used for collision detection
 	SDL_Rect collisionBox;
 	//The position (used to draw the sprite) is stored in x,y. The offset for collision is stored in w,h.
@@ -29,8 +31,6 @@ public:
 	virtual void draw(SDL_Surface*);
 	//Cleans any surfaces or allocated memory
 	virtual void cleanLoop();
-	//This function will deallcoate as much memory as possible. Best when called to destroy itself.
-	virtual void cleanUp();
 
 	//Takes in the otherobject, read the type and then makes state changes.
 	virtual void checkCollisionWith(GameObject * otherObject);

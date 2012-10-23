@@ -21,6 +21,8 @@ GameObject::GameObject(int xPos, int yPos, int widthCollision,
 	deallocate = false;
 }
 
+GameObject::~GameObject(){/*Override when it contains allocated stuff!*/}
+
 int GameObject::centerX()
 { 
 	return collisionBox.x + collisionBox.w/2; 
@@ -31,10 +33,11 @@ int GameObject::centerY()
 }
 void GameObject::moveBox(int xShift, int yShift)
 {
-	collisionBox.x += xShift;
-	collisionBox.y += yShift;
-	pos.x += xShift;
-	pos.y += yShift;
+	setBoxPosition(pos.x+=xShift, pos.y+=yShift);
+	//collisionBox.x += xShift;
+	//collisionBox.y += yShift;
+	//pos.x += xShift;
+	//pos.y += yShift;
 }
 void GameObject::setBoxPosition(int xNew, int yNew)
 {
@@ -51,7 +54,5 @@ void GameObject::update(Uint32){/*Please Override*/};
 void GameObject::draw(SDL_Surface*){/*Please Override*/};
 //Cleans any surfaces or allocated memory
 void GameObject::cleanLoop(){/*Please Override*/};
-//This function will deallcoate as much memory as possible. Best when called to destroy itself.
-void GameObject::cleanUp(){/*Please Override*/};
 //Takes in the otherobject, read the type and then makes state changes.
 void GameObject::checkCollisionWith(GameObject*){/*Please Override*/};

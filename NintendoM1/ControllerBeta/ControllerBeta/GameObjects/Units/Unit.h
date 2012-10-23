@@ -8,6 +8,7 @@ public:
 	Animation sprite; 	//This is the sprite object handler. -JVL
 	//Argument constructor. Everything is set to 0/NULL if parameter is not provided -JVL
 	Unit(int xPosInit, int yPosInit, int widthCollision, int heightCollision, int numSheetColumns , int numSheetRows, int frameWidth, int frameHeight, SDL_Surface * spriteSheet);
+	~Unit();//Deconstructor
 	//The update function checks and does attribute/state changes. Reads in the amount of milleseconds elapsed since the last update cycle. -JVL
 	virtual void update(Uint32);
 	//This update will blit the object on the screen. -JVL
@@ -26,6 +27,7 @@ public:
 
 	//Takes in the otherobject, read the type and then makes state changes.
 	virtual void checkCollisionWith(GameObject * otherObject);
+
 protected:
 	int xPosOld; //The unit's x position at the previous frame. -JVL
 	int yPosOld; //the unit's y position at the previous frame. -JVL

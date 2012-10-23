@@ -1,5 +1,7 @@
 #include "GameObjectManager.h"
 
+vector<GameObject*> GameObjectManager::queuedNewGameObjects;
+
 void GameObjectManager::update(Uint32 timeElapsedMs)
 {
 	//deallocates objects that should be gone.
@@ -21,22 +23,22 @@ void GameObjectManager::deallocateMarkedGameObjects()
 		{
 			GameObject * tempObject = activeGameObjects[i];
 			activeGameObjects.erase(activeGameObjects.begin() + i);
-			tempObject->cleanUp();
 			delete tempObject; //Gone from memory! Do not try to access this again!
+			size--; i--; //moves the for loop pointer back one notch compensating for the erasure so that it does not go out of bounds
 		}
 }
 
 void GameObjectManager::addQueuedGameObjects()
 {
-	int numberObjects = queuedNewGameObjects.size();
+	int numberObjects = GameObjectManager::queuedNewGameObjects.size();
 	for(int i = 0; i < numberObjects; i++) //Transfers
-		activeGameObjects.push_back(queuedNewGameObjects[i]);
-	queuedNewGameObjects.clear(); //resets list for future transfers.
+		activeGameObjects.push_back(GameObjectManager::queuedNewGameObjects[i]);
+	GameObjectManager::queuedNewGameObjects.clear(); //resets list for future transfers.
 }
 
 void GameObjectManager::addGameObject(GameObject * newObjectCopy)
 {
-	queuedNewGameObjects.push_back(newObjectCopy);
+	GameObjectManager::queuedNewGameObjects.push_back(newObjectCopy);
 }
 
 void GameObjectManager::draw(SDL_Surface *destination)

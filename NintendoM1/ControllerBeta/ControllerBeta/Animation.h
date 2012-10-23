@@ -25,18 +25,20 @@ public:
 	bool enable;		//Turn's the animation on or off
 
 	Animation();
+	~Animation();					//Deconstructor
 	void switchRow(int rowNumber);	//Sets the animation to display a new row at the beginning. Does not error check for out of bounds.
 	bool init(int numColumns, int numRows, int frameWidth, int frameHeight, SDL_Surface * spriteSheet);		//Initializes 
-	bool update(Uint32 timeElapsedMs);		//returns a boolean when it has reached the final frame. 
+	bool update(Uint32 timeElapsedMs);		//returns a boolean when it has reached the final frame.
+	void cleanUp();
 	void draw(int xPos, int yPos, SDL_Surface* destination);
 
 	enum AnimStates
 	{
-		Idle = 0,
-		Down = 1,
-		Right = 2,
+		Idle = 4,
+		Down = 2,
+		Right = 0,
 		Up = 3,
-		Left = 4,
+		Left = 1,
 		Attack1Down = 5,
 		Attack1Right = 6,
 		Attack1Up = 7,
