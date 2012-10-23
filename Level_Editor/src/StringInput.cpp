@@ -9,14 +9,35 @@
 
 
 StringInput::StringInput(){
+	loaded = true;
 	textInput = NULL;
+	font = NULL;
+
+	//Path is relative where the executable is.
+	font = TTF_OpenFont("res/robo.ttf", 18);
+	if(font == NULL){
+		loaded = false;
+	}
+
+	textColor = setColor(0, 0, 0);
+
 	str = "";
 	SDL_EnableUNICODE(SDL_ENABLE);
 }
 
 StringInput::~StringInput(){
+	TTF_CloseFont(font);
 	SDL_FreeSurface(textInput);
 	SDL_EnableUNICODE(SDL_DISABLE);
+}
+
+bool StringInput::is_loaded(){
+	return loaded;
+}
+
+SDL_Color StringInput::setColor(Uint8 r, Uint8 g, Uint8 b){
+	SDL_Color temp = {r,g,b};
+	return temp;
 }
 
 std::string StringInput::getStr(){
@@ -54,12 +75,15 @@ int StringInput::get_input(SDL_Event event){
 			return 2;
 		}
 		if(str != temp){
-			/*
+			
 			if(textInput != NULL)
 				SDL_FreeSurface(textInput);
-			textInput = TTF_RenderText_Solid(font, "asdf", textColor);
-			*/
-			std::cout << str << std::endl;
+
+			//If rendering text and font is null, it will segfault.
+			if(font != NULL){
+				textInput = TTF_RenderText_Solid(font, str.c_str(), textColor);
+			}
+			
 			return 1;
 		}
 	}

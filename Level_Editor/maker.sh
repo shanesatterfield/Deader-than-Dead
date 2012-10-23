@@ -1,10 +1,10 @@
 #! /bin/bash
 
-g++ -c Level_Editor.cpp
+g++ -g -c Level_Editor.cpp
 mv Level_Editor.o src
 cd src
 mkdir Object_Files
-g++ -c *.cpp
+g++ -g -c *.cpp
 mv *.o Object_Files
 cd Object_Files
 g++ -o Level_Editor *.o -lSDL -lSDL_image -lSDL_ttf

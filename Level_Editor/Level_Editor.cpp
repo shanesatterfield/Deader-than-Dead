@@ -5,6 +5,7 @@
 #include "src/Button.h"
 #include "src/StringInput.h"
 #include "src/Sprites.h"
+#include "src/LevelWriting.h"
 
 #include <string>
 #include <iostream>
@@ -34,9 +35,6 @@ std::vector<Sprites> spriteVec;
 SDL_Rect posOffset;
 
 SDL_Surface* testSurface = NULL;
-std::string currFile = "";
-std::string currType = "";
-std::string currBackground = "";
 
 SDL_Surface* load_image(std::string filename){
 	SDL_Surface* loadedImage = NULL;
@@ -68,7 +66,7 @@ bool init(){
 
 bool load_files(){
 	font = TTF_OpenFont("res/robo.ttf", yMenuOffset - 1);
-	TTF_SetFontKerning(font, true);
+	//TTF_SetFontKerning(font, true);
 	if(font == NULL)
 		return false;
 	return true;
@@ -135,36 +133,10 @@ bool initButtons(){
 	return true;
 }
 
-//Writes the position of the sprites to the file.
-bool writeToFile(std::string filename, std::vector<Sprites> vec){
-	bool bl = false;
-	std::string finalName = "levels/";
-	finalName += filename;
-	std::ofstream file;
-	file.open(finalName.c_str());
-	if(file.is_open()){
-		bl = true;
-
-		if(background != NULL){
-			file << currBackground << '\n';
-		}
-		for(int i = 0; i < spriteVec.size(); i++){
-			file << spriteVec[i].box.x << " ";
-			file << (spriteVec[i].box.y - yMenuOffset) << " ";
-			file << spriteVec[i].box.w << " ";
-			file << spriteVec[i].box.h << " ";
-			file << spriteVec[i].type << " ";
-			file << spriteVec[i].fromFile << '\n';
-		}
-
-		file.close();
-	}
-	return bl;
-}
-
 //Gets string input.
 std::string gettingStringInput(bool &quit){
 	StringInput strIn;
+
 	bool end = false;
 	int inputType = 0;
 	while(!end && !quit){
@@ -175,8 +147,10 @@ std::string gettingStringInput(bool &quit){
 			if(event.type == SDL_KEYDOWN){
 				int inputType = strIn.get_input(event);
 				if(inputType == 1){
+					/*
 					SDL_FreeSurface(strIn.textInput);
 					strIn.textInput = TTF_RenderText_Solid(font, strIn.getStr().c_str(), textColor);
+					*/
 				}
 				if(inputType == 2){
 					end = true;
@@ -248,6 +222,8 @@ int main(int argc, char* argv[]){
 	if(initButtons() == false)
 		return 1;
 
+	LevelWriting lvlWriter;
+
 	//Sets up the location of the menu bar.
 	SDL_Rect menuBar;
 	menuBar.x = 0;
@@ -272,7 +248,7 @@ int main(int argc, char* argv[]){
 					if(buttonArray[0].check_click(x, y)){
 						std::string stringIn = gettingStringInput(quit);
 						if(stringIn != "")
-							writeToFile(stringIn, spriteVec);
+							lvlWriter.writeToFile(stringIn, spriteVec, yMenuOffset);
 					}
 					
 
@@ -282,8 +258,7 @@ int main(int argc, char* argv[]){
 						stringIn = "res/" + stringIn;
 						background = load_image(stringIn);
 						if(background != NULL){
-							currBackground = stringIn;
-							currType = "Background";
+							lvlWriter.update("Background", stringIn);
 						}
 					}
 
@@ -292,8 +267,7 @@ int main(int argc, char* argv[]){
 						stringIn = "res/" + stringIn;
 						testSurface = load_image(stringIn);
 						if(testSurface != NULL){
-							currFile = stringIn;
-							currType = "Object";
+							lvlWriter.update("Object", stringIn);
 						}
 					}
 
@@ -302,15 +276,14 @@ int main(int argc, char* argv[]){
 						stringIn = "res/" + stringIn;
 						testSurface = load_image(stringIn);
 						if(testSurface != NULL){
-							currFile = stringIn;
-							currType = "Enemy";
+							lvlWriter.update("Enemy", stringIn);
 						}
 					}
 
 					//Creates a new sprite object if the click was not on the menubar.
-					if(y > yMenuOffset && currFile != ""){
+					if(y > yMenuOffset && lvlWriter.fileLoaded()){
 						Sprites temp;
-						temp.spriteSurface = load_image(currFile);
+						temp.spriteSurface = load_image(lvlWriter.getFile());
 						temp.box.w = temp.spriteSurface->w;
 						temp.box.h = temp.spriteSurface->h;
 						temp.box.x = (x + (posOffset.x * -1))/16 * 16;
@@ -322,8 +295,8 @@ int main(int argc, char* argv[]){
 						temp.clip.w = 32;
 						temp.clip.h = 32;
 
-						temp.type = currType;
-						temp.fromFile = currFile;
+						temp.type = lvlWriter.getType();
+						temp.fromFile = lvlWriter.getFile();
 						
 						spriteVec.push_back(temp);
 					}

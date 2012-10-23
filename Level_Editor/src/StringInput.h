@@ -10,6 +10,10 @@
 class StringInput: public SDLBase{
 private:
 	std::string str;
+	TTF_Font* font;
+	SDL_Color textColor;
+	bool loaded;
+	SDL_Color setColor(Uint8 r, Uint8 g, Uint8 b);
 public:
 	StringInput();
 	~StringInput();
@@ -17,6 +21,7 @@ public:
 	void display(int SCREEN_WIDTH, int SCREEN_HEGHT, int yOffset, SDL_Surface* screen);
 	SDL_Surface* textInput;
 	std::string getStr();
+	bool is_loaded();
 };
 
 #endif
