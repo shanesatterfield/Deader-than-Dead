@@ -2,6 +2,7 @@
 # Files Extensions that need to be ingored -Josh's copy! #
 ##########################################################
 *.sdf
+*.suo
 *.sln
 ipch/*
 Debug/*

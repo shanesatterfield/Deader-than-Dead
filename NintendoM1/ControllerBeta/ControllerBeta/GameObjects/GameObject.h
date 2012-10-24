@@ -28,7 +28,7 @@ public:
 	//The update function checks and does attribute/state changes. Reads in the amount of milleseconds elapsed since the last update cycle. -JVL
 	virtual void update(Uint32);
 	//This update will blit the object on the screen. -JVL
-	virtual void draw(SDL_Surface*);
+	virtual void draw(SDL_Surface*, int xOffset, int yOffset);
 	//Cleans any surfaces or allocated memory
 	virtual void cleanLoop();
 

@@ -4,6 +4,7 @@
 #include "SDL_image.h"
 #include "SDL_ttf.h"
 #include "Animation.h"
+#include "Camera.h"
 #include "Clock.h"
 #include "GameObjectManager.h"
 #include "Collision/SpatialHashing.h"
@@ -35,9 +36,6 @@ SDL_Surface *screen = NULL;
 //The event structure
 SDL_Event event;
 
-//The portions of the sprite map to be blitted
-SDL_Rect clip[ 4 ];
-
 //The font that's going to be used
 TTF_Font *font = NULL;
 
@@ -51,8 +49,9 @@ Death * deathPlayer;
 Clock clock;
 SDL_Surface *blackTest = NULL;
 vector<GameObject*> listOfGameObjects;
-static SpatialHashing spatialHashing(SCREEN_WIDTH, SCREEN_HEIGHT, SPATIAL_HASHING_CELL_SIZE);
+static SpatialHashing spatialHashing(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SPATIAL_HASHING_CELL_SIZE);
 static GameObjectManager gameObjectManager;
+static Camera * camera;
 
 SDL_Surface *load_image( std::string filename )
 {
@@ -145,16 +144,20 @@ bool init()
 
 	//Add gameobjects
 	gameObjectManager.addGameObject(deathPlayer);
-	const int NUMBER_OF_MONSTERS = 1000;
+	const int NUMBER_OF_MONSTERS = 500;
 	for(int index = 0; index < NUMBER_OF_MONSTERS; index++)
 	{
 		//There should probably be a central location to store the images instead of loading
 		//the texture into each one...
 		Unit * newTest = new Bat(load_image( "Sprites//enemySprites.png" ));
-		newTest->setPosition((25 * index) % 1024, (index * 25) % 750);
+		newTest->setPosition((25 * index) % 2048, (index * 25) % (768 * 2));
 
 		gameObjectManager.addGameObject(newTest);
 	}
+
+	//Camera!
+	camera = new Camera(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0,
+		300, deathPlayer);
 
     //Set the window caption
     SDL_WM_SetCaption( "Controller BETA Joshua Liong", NULL );
@@ -189,6 +192,9 @@ void clean_up()
     //Free the sprite map
     SDL_FreeSurface( dots );
 
+	//Free camera
+	delete camera;
+
 	//Close the font that was used
     TTF_CloseFont( font );
     
@@ -216,33 +222,7 @@ int main( int argc, char* args[] )
         return 1;
     }
 
-    //Clip range for the top left
-    clip[ 0 ].x = 0;
-    clip[ 0 ].y = 0;
-    clip[ 0 ].w = 100;
-    clip[ 0 ].h = 100;
-
-    //Clip range for the top right
-    clip[ 1 ].x = 100;
-    clip[ 1 ].y = 0;
-    clip[ 1 ].w = 100;
-    clip[ 1 ].h = 100;
-
-    //Clip range for the bottom left
-    clip[ 2 ].x = 0;
-    clip[ 2 ].y = 100;
-    clip[ 2 ].w = 100;
-    clip[ 2 ].h = 100;
-
-    //Clip range for the bottom right
-    clip[ 3 ].x = 100;
-    clip[ 3 ].y = 100;
-    clip[ 3 ].w = 100;
-    clip[ 3 ].h = 100;
-
-    //Fill the screen white
-    SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
-
+ 
 	int i = 0;
 	float xPos = 0;
 	float yPos = 0;
@@ -271,11 +251,12 @@ int main( int argc, char* args[] )
 				}
 			}
 
+			controller->update();		
 			//**********Gameobject/memory handling*********************
 			gameObjectManager.update(timeElapsedMs);
 			spatialHashing.update(gameObjectManager.activeGameObjects);
 			//*********************************************************
-			controller->update();		
+			camera->followObject();
 
 			if(controller->releaseCancel())
 			{
@@ -286,7 +267,7 @@ int main( int argc, char* args[] )
 			
 			animationTest->update(timeElapsedMs);
 			animationTest->draw(xPos,yPos, screen); 
-			gameObjectManager.draw(screen);
+			gameObjectManager.draw(screen, camera->getX(), camera->getY());
 
 			if(false) //DEBUG BLOCK. It should have a square at the center of the sprite.
 			{
@@ -304,9 +285,11 @@ int main( int argc, char* args[] )
 
 			//Render the text
 			std::string s;
+			std::stringstream out1;
 			std::stringstream out2;
-			out2 << timeElapsedMs;
-			string resultCursorStr = "TimeElapsed: " + out2.str();
+			out1 << camera->getX();
+			out2 << camera->getY();
+			string resultCursorStr = "<" + out1.str() + " , " + out2.str() + ">";
 			string text = resultCursorStr;
 		
 			SDL_Surface *message = TTF_RenderText_Solid( font, text.c_str(), textColor );

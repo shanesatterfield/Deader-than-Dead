@@ -12,9 +12,9 @@ Unit::~Unit() {}
 
 void Unit::update(Uint32 timeElapsedMs){/*Please override*/}
 
-void Unit::draw(SDL_Surface *destination)
+void Unit::draw(SDL_Surface *destination, int xOffset, int yOffset)
 {
-	this->sprite.draw(this->pos.x, this->pos.y, destination);
+	this->sprite.draw(this->pos.x - xOffset, this->pos.y - yOffset, destination);
 }
 
 void Unit::checkCollisionWith(GameObject * otherObject){/*Please override*/}

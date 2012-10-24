@@ -19,7 +19,7 @@ public:
 	//Updates all the gameObjects in the world
 	void updateAllGameObjects(Uint32 timeElapsedMs); 
 	//Draws all the gameobjects in the world.
-	void draw(SDL_Surface *destination);
+	void draw(SDL_Surface *destination, int xOffset, int yOffset);
 	//Deallocates all the gameobjects in the world and in the queue.
 	void cleanUp();
 	//Adds a gameObject to the queue so that it may be running by the next frame.

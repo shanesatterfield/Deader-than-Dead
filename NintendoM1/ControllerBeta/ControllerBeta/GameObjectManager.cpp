@@ -41,11 +41,11 @@ void GameObjectManager::addGameObject(GameObject * newObjectCopy)
 	GameObjectManager::queuedNewGameObjects.push_back(newObjectCopy);
 }
 
-void GameObjectManager::draw(SDL_Surface *destination)
+void GameObjectManager::draw(SDL_Surface *destination, int xOffset, int yOffset)
 {
 	int size = activeGameObjects.size();
 	for(int i = 0; i < size; i++)
-		activeGameObjects[i]->draw(destination);
+		activeGameObjects[i]->draw(destination, xOffset, yOffset);
 }
 
 void GameObjectManager::updateAllGameObjects(Uint32 timeElapsedMs)
