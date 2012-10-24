@@ -51,7 +51,7 @@ void GameObject::setBoxPosition(int xNew, int yNew)
 //The update function checks and does attribute/state changes. Reads in the amount of milleseconds elapsed since the last update cycle. -JVL
 void GameObject::update(Uint32){/*Please Override*/};
 //This update will blit the object on the screen. -JVL
-void GameObject::draw(SDL_Surface*){/*Please Override*/};
+void GameObject::draw(SDL_Surface*, int xOffset, int yOffset){/*Please Override*/};
 //Cleans any surfaces or allocated memory
 void GameObject::cleanLoop(){/*Please Override*/};
 //Takes in the otherobject, read the type and then makes state changes.

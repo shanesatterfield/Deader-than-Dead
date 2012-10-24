@@ -12,7 +12,7 @@ public:
 	//The update function checks and does attribute/state changes. Reads in the amount of milleseconds elapsed since the last update cycle. -JVL
 	virtual void update(Uint32);
 	//This update will blit the object on the screen. -JVL
-	virtual void draw(SDL_Surface*);
+	virtual void draw(SDL_Surface*, int xOffset, int yOffset);
 	//Sets the position of the gameObject to exactly where the parameters specify. It also moves the collision box. -JVL
 	void setPosition(int xPosNew, int yPosNew);
 	//Moves the x/y position and the collision box by the amount specified
