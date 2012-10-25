@@ -35,28 +35,21 @@ void Death::handleMovement(Uint32 timeElapsedMs)
 
 void Death::handleLook()
 {
-	//if(stayedInSamePosition())
-	//	this->sprite.curRow = Animation::AnimStates::Idle;
-	//else
-	//{
-		//temporary variable. 
-		const int OFFSET = 0;
-
-		//test - float angle
-		float angle = controller->detectLookAngle(this->centerX(), this->centerY(), OFFSET, OFFSET);
-			if(angle < -45.0f)
-				if(angle < -135.0f)
-					this->sprite.curRow = Animation::AnimStates::Left; //angle (-180 thru -135)
-				else
-					this->sprite.curRow = Animation::AnimStates::Up; //angle (-135 thru -45)
+	
+	//test - float angle
+	float angle = controller->detectLookAngle(this->centerX(), this->centerY(), OFFSET, OFFSET);
+		if(angle < -45.0f)
+			if(angle < -135.0f)
+				this->sprite.curRow = Animation::AnimStates::Left; //angle (-180 thru -135)
 			else
-				if(angle > 135)
-					this->sprite.curRow = Animation::AnimStates::Left; //agnle (180 thru 135)
-				else if(angle > 45)
-					this->sprite.curRow = Animation::AnimStates::Down; //angle (135 thru 45)
-				else
-					this->sprite.curRow = Animation::AnimStates::Right; //angle (45 thru -45)
-	//}
+				this->sprite.curRow = Animation::AnimStates::Up; //angle (-135 thru -45)
+		else
+			if(angle > 135)
+				this->sprite.curRow = Animation::AnimStates::Left; //agnle (180 thru 135)
+			else if(angle > 45)
+				this->sprite.curRow = Animation::AnimStates::Down; //angle (135 thru 45)
+			else
+				this->sprite.curRow = Animation::AnimStates::Right; //angle (45 thru -45)
 }
 
 void Death::checkCollisionWith(GameObject * otherObject)

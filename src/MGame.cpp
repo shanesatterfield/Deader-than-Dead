@@ -61,8 +61,6 @@ bool MGame::main(){
 		//*********************************************************
 		camera->followObject();
 
-	
-
 		gameObjectManager.draw(screen, camera->getX(), camera->getY());
 
 		//Render the text
