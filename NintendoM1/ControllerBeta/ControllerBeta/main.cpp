@@ -52,6 +52,7 @@ vector<GameObject*> listOfGameObjects;
 static SpatialHashing spatialHashing(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SPATIAL_HASHING_CELL_SIZE);
 static GameObjectManager gameObjectManager;
 static Camera * camera;
+static SDL_Surface * batImage;
 
 SDL_Surface *load_image( std::string filename )
 {
@@ -144,12 +145,13 @@ bool init()
 
 	//Add gameobjects
 	gameObjectManager.addGameObject(deathPlayer);
-	const int NUMBER_OF_MONSTERS = 500;
+	const int NUMBER_OF_MONSTERS = 1000;
+	batImage = load_image( "Sprites//enemySprites.png" );
 	for(int index = 0; index < NUMBER_OF_MONSTERS; index++)
 	{
 		//There should probably be a central location to store the images instead of loading
 		//the texture into each one...
-		Unit * newTest = new Bat(load_image( "Sprites//enemySprites.png" ));
+		Unit * newTest = new Bat(batImage);
 		newTest->setPosition((25 * index) % 2048, (index * 25) % (768 * 2));
 
 		gameObjectManager.addGameObject(newTest);
@@ -158,6 +160,7 @@ bool init()
 	//Camera!
 	camera = new Camera(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0,
 		300, deathPlayer);
+	
 
     //Set the window caption
     SDL_WM_SetCaption( "Controller BETA Joshua Liong", NULL );
