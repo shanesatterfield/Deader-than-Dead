@@ -15,7 +15,7 @@ private:
 public:
 	MGame(SDL_Event &event);
 	~MGame();
-	bool main(SDL_Surface* screen);
+	bool main();
 };
 
 #endif

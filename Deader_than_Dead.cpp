@@ -17,6 +17,7 @@ Collaborators:
 
 #include "src/MGame.h"
 #include "src/GameScreen.h"
+#include "src/StartScreen.h"
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -33,10 +34,18 @@ int main(int argc, char* argv[]){
 	bool quit = false;
 	if(init() == false)
 		return 1;
+
+	StartScreen starScream(event, SCREEN_WIDTH, SCREEN_HEIGHT);
 	MGame mgame(event);
+
 	while(!quit){
-		if(mgame.main(screen) == false){
+		if(starScream.main() == true){
 			quit = true;
+			break;
+		}
+		if(mgame.main() == false){
+			quit = true;
+			break;
 		}
 	}
 
