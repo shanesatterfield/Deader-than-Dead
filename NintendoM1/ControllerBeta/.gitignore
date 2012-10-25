@@ -1,9 +1,0 @@
-##########################################################
-# Files Extensions that need to be ingored -Josh's copy! #
-##########################################################
-*.sdf
-*.sln
-ipch/*
-Debug/*
-ControllerBeta/Debug/*
-ControllerBeta/*.vcxproj*

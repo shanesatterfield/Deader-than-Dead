@@ -11,7 +11,6 @@
 //Game logic Added By Joshua Liong Below.
 #include "MGame/Animation.h"
 #include "MGame/Camera.h"
-#include "MGame/Clock.h" //TODO: DELETE!
 #include "MGame/GameObjectManager.h"
 #include "MGame/Collision/SpatialHashing.h"
 #include "MGame/Controller/Controller.h"
@@ -29,6 +28,8 @@ private:
 	SDL_Event event;
 	SDL_Surface* stuff;
 	bool load_files();
+	bool init_all_objects();
+
 public:
 	MGame(SDL_Event &event);
 	~MGame();
@@ -36,14 +37,13 @@ public:
 
 	//New features!
 	Controller * controller;
-	Animation * animationTest;
 	Death * deathPlayer;
-	Clock clock;
-	vector<GameObject*> listOfGameObjects;
 	static SpatialHashing spatialHashing;
 	static GameObjectManager gameObjectManager;
 	static Camera * camera;
 	static SDL_Surface * batImage;
+	static SDL_Surface * deathImage;
+	TTF_Font *font;
 };
 
 #endif

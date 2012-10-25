@@ -107,7 +107,6 @@ bool init()
         return false;
     }
 
-
     //Set up the screen
     screen = SDL_SetVideoMode( SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_BPP, SDL_SWSURFACE );
 
