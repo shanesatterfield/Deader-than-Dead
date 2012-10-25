@@ -29,6 +29,11 @@ void SDLBase::apply_surface(int x, int y, SDL_Surface* source, SDL_Surface *dest
 std::string SDLBase::convert_path(std::string filename){
 	char path[MAXPATHLEN];
 	getcwd(path, MAXPATHLEN);
-	strcat(path, ('\\'+filename).c_str() );
+	strcat(path, ('/'+filename).c_str() );
 	return (std::string)path;
+}
+
+SDL_Color SDLBase::setColor(Uint8 r, Uint8 g, Uint8 b){
+	SDL_Color temp = {r,g,b};
+	return temp;
 }

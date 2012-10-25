@@ -10,6 +10,7 @@
 class GameScreen: public SDLBase{
 protected:
 	SDL_Surface* gScreen;
+	SDL_Surface* screen;
 	GameScreen();
 	~GameScreen();
 };
