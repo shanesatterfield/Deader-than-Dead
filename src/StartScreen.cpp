@@ -1,8 +1,8 @@
 #include "StartScreen.h"
 
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
-#include "SDL/SDL_ttf.h"
+#include "SDL.h"
+#include "SDL_image.h"
+#include "SDL_ttf.h"
 
 #include <iostream>
 
@@ -22,7 +22,6 @@ bool StartScreen::main(){
 				}
 			}
 		}
-
 		
 		apply_surface((SCREEN_WIDTH - messages[0]->w)/2, SCREEN_HEIGHT/3, messages[0], screen);
 		apply_surface((SCREEN_WIDTH - messages[1]->w)/2, 2*SCREEN_HEIGHT/3, messages[1], screen);

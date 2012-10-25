@@ -1,13 +1,22 @@
 #include "MGame.h"
 
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
-#include "SDL/SDL_ttf.h"
+#include "SDL.h"
+#include "SDL_image.h"
+#include "SDL_ttf.h"
 
 #include "SDLBase.h"
 #include "GameScreen.h"
 
 #include <iostream>
+
+//Screen attributes
+const int SCREEN_WIDTH = 1024;
+const int SCREEN_HEIGHT = 768;
+const int SCREEN_BPP = 32;
+const int SPATIAL_HASHING_CELL_SIZE = 128;
+const int SPEED = 400; //pixels per second
+//The color of the font
+SDL_Color textColor = { 0, 0, 0 };
 
 bool MGame::main(){
 	bool quit = false;
@@ -36,6 +45,7 @@ bool MGame::main(){
 	return !quit;
 }
 
+//Loading Files
 bool MGame::load_files(){
 	gScreen = load_image("res/background.png");
 	if(gScreen == NULL)
@@ -43,6 +53,7 @@ bool MGame::load_files(){
 	return true;
 }
 
+//Constructor
 MGame::MGame(SDL_Event &tEvent){
 	event = tEvent;
 	stuff == NULL;
@@ -51,6 +62,7 @@ MGame::MGame(SDL_Event &tEvent){
 		std::cout << "Hey" << std::endl;
 }
 
+//Deconstructor
 MGame::~MGame(){
 	SDL_FreeSurface(stuff);
 }
