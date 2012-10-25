@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-bool MGame::main(SDL_Surface* screen){
+bool MGame::main(){
 	bool quit = false;
 	
 	if(load_files() == false){

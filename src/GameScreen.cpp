@@ -7,6 +7,7 @@
 
 GameScreen::GameScreen(){
 	gScreen = NULL;
+	screen = SDL_GetVideoSurface();
 }
 
 GameScreen::~GameScreen(){

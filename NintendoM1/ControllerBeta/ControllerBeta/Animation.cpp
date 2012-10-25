@@ -2,10 +2,7 @@
 
 Animation::Animation(){}
 
-Animation::~Animation()
-{
-	SDL_FreeSurface(spriteSheet);
-}
+Animation::~Animation(){}
 
 bool Animation::init(int numColumns, int numRows, int frameWidth, int frameHeight, SDL_Surface * spriteSheet)
 {
