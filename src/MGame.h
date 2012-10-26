@@ -1,21 +1,49 @@
 #ifndef MGAME_H
 #define MGAME_H
+#pragma once
 
-#include "SDL/SDL.h"
-#include "SDL/SDL_image.h"
-#include "SDL/SDL_ttf.h"
+#include "SDL.h"
+#include "SDL_image.h"
+#include "SDL_ttf.h"
 
 #include "GameScreen.h"
+
+//Game logic Added By Joshua Liong Below.
+#include "MGame/Animation.h"
+#include "MGame/Camera.h"
+#include "MGame/GameObjectManager.h"
+#include "MGame/Collision/SpatialHashing.h"
+#include "MGame/Controller/Controller.h"
+#include "MGame/Controller/KeyboardMouse.h"
+#include "MGame/GameObjects/Units/Bat.h"
+#include "MGame/GameObjects/Units/Death.h"
+#include "MGame/GameObjects/Units/TestMonster.h"
+#include <string>
+#include <stdlib.h>
+#include <sstream>
+#include <vector>
 
 class MGame: public GameScreen{
 private:
 	SDL_Event event;
 	SDL_Surface* stuff;
 	bool load_files();
+	bool init_all_objects();
+
 public:
 	MGame(SDL_Event &event);
 	~MGame();
 	bool main();
+
+	//New features!
+	Controller * controller;
+	Death * deathPlayer;
+	static SpatialHashing spatialHashing;
+	static GameObjectManager gameObjectManager;
+	static Camera * camera;
+	static SDL_Surface * batImage;
+	static SDL_Surface * deathImage;
+	TTF_Font *font;
 };
 
 #endif
