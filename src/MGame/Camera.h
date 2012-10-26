@@ -6,14 +6,14 @@
 class Camera
 {
 private:
-	//The Box represents the camera borders. If the player goes beyond the invisible box, the box position will shift to keep the character in the box.
-	SDL_Rect boxPosAndSize;
 	int widthOfEntireMap;
 	int heightOfEntireMap;
 	int screenWidth;
 	int screenHeight;
 	
 public:
+	//The Box represents the camera borders. If the player goes beyond the invisible box, the box position will shift to keep the character in the box.
+	static SDL_Rect boxPosAndSize;
 	//The position of the object will be regularly pinged so that the camera can follow it. Be careful when deallocating this object elsewhere.
 	GameObject * objectToFollow;
 

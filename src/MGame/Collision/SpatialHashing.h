@@ -27,5 +27,4 @@ private:
 	int squareCellSize;
 	//contains all the buckets to check the collisions within each individual bucket.
 	vector<vector<GameObject*>*> buckets;
-	
 };

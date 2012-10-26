@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+SDL_Rect Camera::boxPosAndSize;
+
 Camera::Camera(int mapWidthLimit, int mapHeightLimit, int screenWidth, int screenHeight,
 		int xPos, int yPos, int sizeOfCameraBox, GameObject * playerObject)
 {

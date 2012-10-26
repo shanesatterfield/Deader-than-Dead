@@ -1,11 +1,12 @@
 #include "Death.h"
+#include "../../Camera.h"
 #include "../../Constants.h"
 
 #define NUM_FRAMES_X	3
 #define NUM_FRAMES_Y	4
 
 Death::Death(int xPos, int yPos, SDL_Surface* spriteSheet, Controller* controller)
-	: Unit(xPos, yPos, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, 
+	: Unit(xPos, yPos, STANDARD_FRAMESIZE_PIX / 2, STANDARD_FRAMESIZE_PIX, 
 	NUM_FRAMES_X, NUM_FRAMES_Y, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, spriteSheet)
 {
 	this->controller = controller;
@@ -35,9 +36,11 @@ void Death::handleMovement(Uint32 timeElapsedMs)
 
 void Death::handleLook()
 {
-	
+	int offsetX =  Camera::boxPosAndSize.x;
+	int offsetY = Camera::boxPosAndSize.y;
+
 	//test - float angle
-	float angle = controller->detectLookAngle(this->centerX(), this->centerY(), OFFSET, OFFSET);
+	float angle = controller->detectLookAngle(this->centerX(), this->centerY(), offsetX, offsetY);
 		if(angle < -45.0f)
 			if(angle < -135.0f)
 				this->sprite.curRow = Animation::AnimStates::Left; //angle (-180 thru -135)
@@ -63,4 +66,3 @@ void Death::checkCollisionWith(GameObject * otherObject)
 		break;
 	}
 }
-
