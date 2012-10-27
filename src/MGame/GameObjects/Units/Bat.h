@@ -1,6 +1,6 @@
 #pragma once
 #include "../Units/Unit.h"
-
+#include <cmath>
 class Bat : public Unit
 {
 public: 
@@ -9,7 +9,10 @@ public:
 	void update(Uint32 timeElapsedMs);
 	void handleMovement(Uint32 timeElapsedMs);
 	void handleLook();
+	void changeRandomDirection();
 
 private:
-	bool goLeft;
+	bool randomMovement;
+	Uint32 actionTimer;
+	float xVelocity; float yVelocity;
 };

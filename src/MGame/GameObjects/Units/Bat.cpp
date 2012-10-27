@@ -3,12 +3,14 @@
 
 #define NUM_FRAMES_X	2
 #define NUM_FRAMES_Y	2
+#define CHANGE_TO_RANDOM_MOVEMENT 200
+#define CHANGE_TO_CHASE 800
 
 Bat::Bat(SDL_Surface* spriteSheet, GameObject * target) 
 	: Unit(10, 382, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, 
 	NUM_FRAMES_X, NUM_FRAMES_Y, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, spriteSheet, target)
 {
-	goLeft = false;
+	randomMovement = false;
 	this->type = (int)ObjectType::Enemy;
 }
 
@@ -16,45 +18,78 @@ Bat::Bat(SDL_Surface* spriteSheet)
 	: Unit(10, 382, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, 
 	NUM_FRAMES_X, NUM_FRAMES_Y, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, spriteSheet)
 {
-	goLeft = false;
+	randomMovement = false;
 	this->type = (int)ObjectType::Enemy;
 }
 
 void Bat::update(Uint32 timeElapsedMs)
 {
-	saveCurPosToOldPos(); //Retains previous frame data before changes.
 	
-	//handleMovement(timeElapsedMs); //movement handled by AI as opposed to a controller.
-	this->chaseTarget(timeElapsedMs, PLAYER_MOVEMENT_SPEED / 2);
-
-	/*
-	if(pos.x > 900)
+	//Get distance of bat to player
+	int xDiff = target->centerX() - this->centerX();
+	int yDiff = target->centerY() - this->centerY();
+	int distance = sqrt(float(xDiff*xDiff + yDiff * yDiff));
+	
+	//if bat is close enough, randomize movement. else, chase player.
+	if(!randomMovement && distance < CHANGE_TO_RANDOM_MOVEMENT)
 	{
-		this->setPosition(900, pos.y);
-		goLeft = true;
+		randomMovement = true;
+		xVelocity = pos.x - xPosOld;//Preserve current vector approach
+		yVelocity = pos.y - yPosOld;//Preserve current vector approach
+		float normalization = this->findNormalizationDenominator(xVelocity, yVelocity);
+		xVelocity /= normalization;
+		yVelocity /= normalization;
 	}
-	else if(collisionBox.x < 100)
-	{
-		this->setPosition(100, pos.y);
-		goLeft = false;
-	}*/
-		
+	else if(randomMovement && distance > CHANGE_TO_CHASE)
+		randomMovement = false;
+
+	saveCurPosToOldPos(); //Retains previous frame data before changes.
+
+	handleMovement(timeElapsedMs); //movement handled by AI as opposed to a controller.
+	
 	handleLook();
 	sprite.update(timeElapsedMs);
 }
 
 void Bat::handleMovement(Uint32 timeElapsedMs)
 {
-	float totalSpeed = PLAYER_MOVEMENT_SPEED * timeElapsedMs/1000.0f;
-	if(goLeft)
-		moveBy(-totalSpeed, 0);
+	if(!randomMovement)
+		this->chaseTarget(timeElapsedMs, PLAYER_MOVEMENT_SPEED);
 	else
-		moveBy(totalSpeed,0);
+	{
+		//Determine whether the velocity vector should be randomized.
+		actionTimer += timeElapsedMs;
+		const int TIME_TO_CHANGE_MOVEMENT_PATTERN = 1000;
+		if(actionTimer > TIME_TO_CHANGE_MOVEMENT_PATTERN)
+		{
+			changeRandomDirection(); 
+			actionTimer = 0;
+		}
+
+		//Apply the single direction movement.
+		this->moveBy(xVelocity * PLAYER_MOVEMENT_SPEED * timeElapsedMs/1000.0f,
+			yVelocity * PLAYER_MOVEMENT_SPEED * timeElapsedMs/1000.0f );
+	}
+}
+
+//http://www.cplusplus.com/reference/clibrary/cstdlib/rand/
+//http://www.daniweb.com/software-development/cpp/threads/1769/c-random-numbers
+void Bat::changeRandomDirection()
+{
+	int unNormalizedX = (rand() % 200) - 100;
+	int unNormalizedY = (rand() % 200) - 100;
+	float normalizationDenominator; 
+	abs(unNormalizedX) > abs(unNormalizedY) ? 
+		normalizationDenominator = abs(unNormalizedX) : 
+		normalizationDenominator = abs(unNormalizedY);
+
+	xVelocity = unNormalizedX / normalizationDenominator;
+	yVelocity = unNormalizedY / normalizationDenominator;
 }
 
 void Bat::handleLook()
 {
-	if(goLeft)
+	if(pos.x < xPosOld)
 		this->sprite.curRow = 0; //Magic Numbers T.T
 	else
 		this->sprite.curRow = 1; //Magic Numbers T.T

@@ -1,6 +1,8 @@
 #pragma once
 #include "SDL.h"
 #include "ObjectType.h"
+#include <cmath>
+
 class GameObject
 {
 public:
@@ -37,4 +39,7 @@ public:
 
 	//Takes in the otherobject, read the type and then makes state changes.
 	virtual void checkCollisionWith(GameObject * otherObject);
+
+protected:
+	float findNormalizationDenominator(float num1, float num2);
 };

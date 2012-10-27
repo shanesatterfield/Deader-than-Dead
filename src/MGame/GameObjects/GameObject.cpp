@@ -51,6 +51,14 @@ void GameObject::setBoxPosition(int xNew, int yNew)
 	collisionBox.x = xNew + pos.w;
 	collisionBox.y = yNew + pos.h;
 }
+float GameObject::findNormalizationDenominator(float num1, float num2)
+{
+	float normalizationDenominator;
+	abs(num1) > abs(num2) ? 
+		normalizationDenominator = abs(num1) : 
+		normalizationDenominator = abs(num2);
+	return normalizationDenominator;
+}
 
 //----overridable functions-----//
 //The update function checks and does attribute/state changes. Reads in the amount of milleseconds elapsed since the last update cycle. -JVL

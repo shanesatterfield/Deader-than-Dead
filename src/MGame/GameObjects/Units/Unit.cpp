@@ -1,5 +1,4 @@
 #include "Unit.h"
-#include <cmath>
 
 Unit::Unit(int xPosInit , int yPosInit , int widthCollision , int heightCollision, 
 	int numSheetColumns , int numSheetRows , int frameWidth , int frameHeight , SDL_Surface * spriteSheet,
@@ -55,10 +54,7 @@ void Unit::chaseTarget(Uint32 timeElapsed, int speed)
 {
 	float unNormalizedX = target->centerX() - this->centerX();
 	float unNormalizedY = target->centerY() - this->centerY();
-	float normalizationDenominator; 
-	abs(unNormalizedX) > abs(unNormalizedY) ? 
-		normalizationDenominator = abs(unNormalizedX) : 
-		normalizationDenominator = abs(unNormalizedY);
+	float normalizationDenominator = findNormalizationDenominator(unNormalizedX, unNormalizedY); 
 
 	float normalizedX = unNormalizedX / normalizationDenominator;
 	float normalizedY = unNormalizedY / normalizationDenominator;
