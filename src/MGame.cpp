@@ -11,8 +11,8 @@
 
 //Screen attributes
 const int FRAMES_PER_SECOND = 30;
-const int SCREEN_WIDTH = 1024;
-const int SCREEN_HEIGHT = 768;
+const int SCREEN_WIDTH = 800; //TODO: This was already defined in Deader-Than-Dead.cpp
+const int SCREEN_HEIGHT = 600;//TODO: This was already defined in Deader-Than-Dead.cpp
 const int SCREEN_BPP = 32;
 const int SPATIAL_HASHING_CELL_SIZE = 128;
 const int SPEED = 400; //pixels per second
@@ -52,7 +52,7 @@ bool MGame::main(){
 				quit = true; //ESC terminates the program
 			//**********Gameobject/memory handling*********************
 			gameObjectManager.update(clock.timeElapsed);
-			spatialHashing.update(gameObjectManager.activeGameObjects);
+			spatialHashing.update(gameObjectManager.getAllObjectsList());
 			//*********************************************************
 			camera->followObject();
 
@@ -117,15 +117,15 @@ bool MGame::init_all_objects()
 	if(!controller->init()) return false;
 
 	//Initialize Player Death and add to master gameobject list.
-	deathPlayer = new Death(700, 700, deathImage, controller);
+	deathPlayer = new Death(400, 300, deathImage, controller);
 	gameObjectManager.addGameObject(deathPlayer);
 
 	//Load Monsters/Tiles here.
-	const int NUMBER_OF_MONSTERS = 30;
+	const int NUMBER_OF_MONSTERS = 1000;
 	for(int index = 0; index < NUMBER_OF_MONSTERS; index++)
 	{
 		Unit * newTest = new Bat(batImage, deathPlayer);
-		newTest->setPosition((25 * index) % 2048, (index * 25) % (768 * 2));
+		newTest->setPosition((32 * index) % 1600, (index * 25) % (768 * 2) % 1200);
 		gameObjectManager.addGameObject(newTest);
 	}
 

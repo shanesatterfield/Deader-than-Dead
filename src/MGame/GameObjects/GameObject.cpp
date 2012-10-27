@@ -27,6 +27,7 @@ GameObject::GameObject(int xPos, int yPos, int widthCollision,
 	
 	//Flag is false; you just created this object!
 	deallocate = false;
+	this->target = NULL;
 }
 
 GameObject::~GameObject(){/*Override when it contains allocated stuff!*/}
@@ -42,10 +43,6 @@ int GameObject::centerY()
 void GameObject::moveBox(int xShift, int yShift)
 {
 	setBoxPosition(pos.x+=xShift, pos.y+=yShift);
-	//collisionBox.x += xShift;
-	//collisionBox.y += yShift;
-	//pos.x += xShift;
-	//pos.y += yShift;
 }
 void GameObject::setBoxPosition(int xNew, int yNew)
 {

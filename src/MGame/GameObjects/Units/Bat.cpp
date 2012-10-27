@@ -24,7 +24,10 @@ void Bat::update(Uint32 timeElapsedMs)
 {
 	saveCurPosToOldPos(); //Retains previous frame data before changes.
 	
-	handleMovement(timeElapsedMs); //movement handled by AI as opposed to a controller.
+	//handleMovement(timeElapsedMs); //movement handled by AI as opposed to a controller.
+	this->chaseTarget(timeElapsedMs, PLAYER_MOVEMENT_SPEED / 2);
+
+	/*
 	if(pos.x > 900)
 	{
 		this->setPosition(900, pos.y);
@@ -34,7 +37,7 @@ void Bat::update(Uint32 timeElapsedMs)
 	{
 		this->setPosition(100, pos.y);
 		goLeft = false;
-	}
+	}*/
 		
 	handleLook();
 	sprite.update(timeElapsedMs);

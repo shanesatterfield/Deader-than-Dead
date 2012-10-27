@@ -31,6 +31,9 @@ public:
 	//Takes in the otherobject, read the type and then makes state changes.
 	virtual void checkCollisionWith(GameObject * otherObject);
 
+	//AI methods
+	void chaseTarget(Uint32 timeElapsed, int speed);
+
 protected:
 	int xPosOld; //The unit's x position at the previous frame. -JVL
 	int yPosOld; //the unit's y position at the previous frame. -JVL

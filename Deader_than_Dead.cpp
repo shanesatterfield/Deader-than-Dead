@@ -19,8 +19,8 @@ Collaborators:
 #include "src/GameScreen.h"
 #include "src/StartScreen.h"
 
-const int SCREEN_WIDTH = 800;
-const int SCREEN_HEIGHT = 600;
+const int SCREEN_WIDTH = 800;	//TODO: This was already defined in MGame.cpp. 
+const int SCREEN_HEIGHT = 600;	//TODO: This was already defined in MGame.cpp. 
 const int SCREEN_BPP = 32;
 
 SDL_Surface *screen = NULL;

@@ -1,6 +1,8 @@
 #pragma once
 #include "GameObjects\GameObject.h"
 #include <vector>
+#include <algorithm>
+#include <iterator>
 
 using namespace std;
 
@@ -11,8 +13,14 @@ class GameObjectManager
 public:
 	//Contains the addresses of newly created objects to be added to the world
 	static vector<GameObject*> queuedNewGameObjects;
-	//Contains the addresses of active game objects updating/drawing in the world.
-	vector<GameObject*> activeGameObjects;
+	//Contains gameobjects (Floor)
+	vector<GameObject*> activeGameObjectsLayer1; 
+	//Contains gameobjects (Player, Player melee attacks)
+	vector<GameObject*> activeGameObjectsLayer2; 
+	//Contains gameobjects (Enemies)
+	vector<GameObject*> activeGameObjectsLayer3;
+	//Contains gameobjects (Tall Environments)
+	vector<GameObject*> activeGameObjectsLayer4;
 
 	//Manages deallocation, allocation and updates of gameObjects in the world.
 	void update(Uint32 timeElapsedMs);
@@ -26,7 +34,8 @@ public:
 	void addGameObject(GameObject * newObjectCopy);
 	//Tells you the number of gameobjects, including all tiles and enemies on the field.
 	int getNumberOfObjects();
-
+	//Returns a master list of all objects
+	vector<GameObject*> getAllObjectsList();
 private:
 	//Iterates thru and destroys all objects marked for deletion.
 	void deallocateMarkedGameObjects();
