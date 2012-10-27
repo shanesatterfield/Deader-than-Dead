@@ -13,6 +13,8 @@ bool Animation::init(int numColumns, int numRows, int frameWidth, int frameHeigh
 	this->spriteClip = new SDL_Rect[numRows*numColumns];
 	this->numRows = numRows;
 	this->numColumns = numColumns;
+	this->frameWidth = frameWidth;
+	this->frameHeight = frameHeight;
 
 	curRow = 0;
 	curColumn = 0;
