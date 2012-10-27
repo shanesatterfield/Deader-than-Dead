@@ -6,6 +6,8 @@ class GameObject
 public:
 	//Constructor used to define the collision box of this gameobject. Sadly they are all boxes...
 	GameObject(int xPos, int yPos, int collisionX, int collisionY, int boxOffestX, int boxOffsetY);
+	//Second Constructor used to define the collision box of this gameobject. Sadly they are all boxes...
+	GameObject(int xPos, int yPos, int collisionX, int collisionY, int boxOffestX, int boxOffsetY, GameObject * targetObject);
 	//Virtual deconstructor. Needed so that the child classes can be destroyed when in a generic list.
 	virtual ~GameObject();
 	//The collision box to be used for collision detection
@@ -24,7 +26,8 @@ public:
 	void setBoxPosition(int xShift, int yShift);
 	//Enum Type of GameObject; defines what it is.
 	int type;
-
+	//Determines the target to attack, chase or modify, depending on Update AI.
+	GameObject * target;
 	//The update function checks and does attribute/state changes. Reads in the amount of milleseconds elapsed since the last update cycle. -JVL
 	virtual void update(Uint32);
 	//This update will blit the object on the screen. -JVL

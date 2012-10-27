@@ -4,6 +4,14 @@
 #define NUM_FRAMES_X	2
 #define NUM_FRAMES_Y	2
 
+Bat::Bat(SDL_Surface* spriteSheet, GameObject * target) 
+	: Unit(10, 382, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, 
+	NUM_FRAMES_X, NUM_FRAMES_Y, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, spriteSheet, target)
+{
+	goLeft = false;
+	this->type = (int)ObjectType::Enemy;
+}
+
 Bat::Bat(SDL_Surface* spriteSheet) 
 	: Unit(10, 382, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, 
 	NUM_FRAMES_X, NUM_FRAMES_Y, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, spriteSheet)
@@ -17,14 +25,14 @@ void Bat::update(Uint32 timeElapsedMs)
 	saveCurPosToOldPos(); //Retains previous frame data before changes.
 	
 	handleMovement(timeElapsedMs); //movement handled by AI as opposed to a controller.
-	if(collisionBox.x > 900)
+	if(pos.x > 900)
 	{
-		collisionBox.x = 900;
+		this->setPosition(900, pos.y);
 		goLeft = true;
 	}
 	else if(collisionBox.x < 100)
 	{
-		collisionBox.x = 100;
+		this->setPosition(100, pos.y);
 		goLeft = false;
 	}
 		

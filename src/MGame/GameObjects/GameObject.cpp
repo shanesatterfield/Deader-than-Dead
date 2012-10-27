@@ -1,5 +1,13 @@
 #include "GameObject.h"
 
+GameObject::GameObject(int xPos, int yPos, int widthCollision, 
+	int heightCollision, int boxOffsetX, int boxOffsetY, GameObject * gameObject)
+{
+	*this = GameObject::GameObject(xPos, yPos, widthCollision, 
+	heightCollision, boxOffsetX, boxOffsetY); //Calls regular constructor
+	this->target = gameObject; //Assigns a target to do stuff with.
+}
+
 //Precondition: the position, width and height of the collisionBox. 
 //Postcondition: A gameobject is created with a collision box.
 GameObject::GameObject(int xPos, int yPos, int widthCollision, 

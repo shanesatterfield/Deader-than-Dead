@@ -1,6 +1,16 @@
 #include "Unit.h"
 
 Unit::Unit(int xPosInit , int yPosInit , int widthCollision , int heightCollision, 
+	int numSheetColumns , int numSheetRows , int frameWidth , int frameHeight , SDL_Surface * spriteSheet,
+	GameObject * gameObject) 
+		: GameObject(xPosInit, yPosInit, widthCollision, heightCollision, 
+		(int)abs((widthCollision-frameWidth)/2), (int)abs((heightCollision-frameHeight)/2),
+		gameObject)
+{
+	this->sprite.init(numSheetColumns, numSheetRows, frameWidth, frameHeight, spriteSheet);
+}
+
+Unit::Unit(int xPosInit , int yPosInit , int widthCollision , int heightCollision, 
 	int numSheetColumns , int numSheetRows , int frameWidth , int frameHeight , SDL_Surface * spriteSheet) 
 		: GameObject(xPosInit, yPosInit, widthCollision, heightCollision, 
 		(int)abs((widthCollision-frameWidth)/2), (int)abs((heightCollision-frameHeight)/2))

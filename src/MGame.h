@@ -11,6 +11,7 @@
 //Game logic Added By Joshua Liong Below.
 #include "MGame/Animation.h"
 #include "MGame/Camera.h"
+#include "MGame/Clock.h"
 #include "MGame/GameObjectManager.h"
 #include "MGame/Collision/SpatialHashing.h"
 #include "MGame/Controller/Controller.h"
@@ -27,6 +28,7 @@ class MGame: public GameScreen{
 private:
 	SDL_Event event;
 	SDL_Surface* stuff;
+	Clock clock;
 	bool load_files();
 	bool init_all_objects();
 

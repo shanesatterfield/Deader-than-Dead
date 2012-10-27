@@ -6,8 +6,11 @@ class Unit : public GameObject
 {
 public:
 	Animation sprite; 	//This is the sprite object handler. -JVL
-	//Argument constructor. Everything is set to 0/NULL if parameter is not provided -JVL
+	//Argument constructor. -JVL
 	Unit(int xPosInit, int yPosInit, int widthCollision, int heightCollision, int numSheetColumns , int numSheetRows, int frameWidth, int frameHeight, SDL_Surface * spriteSheet);
+	//Second Arguemnt constructor.
+	Unit(int xPosInit , int yPosInit , int widthCollision , int heightCollision, int numSheetColumns , int numSheetRows , int frameWidth , int frameHeight , SDL_Surface * spriteSheet,
+		GameObject * gameObject);
 	~Unit();//Deconstructor
 	//The update function checks and does attribute/state changes. Reads in the amount of milleseconds elapsed since the last update cycle. -JVL
 	virtual void update(Uint32);

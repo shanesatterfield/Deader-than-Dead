@@ -10,6 +10,7 @@
 #include <iostream>
 
 //Screen attributes
+const int FRAMES_PER_SECOND = 30;
 const int SCREEN_WIDTH = 1024;
 const int SCREEN_HEIGHT = 768;
 const int SCREEN_BPP = 32;
@@ -26,68 +27,63 @@ SDL_Surface * MGame::deathImage;
 
 bool MGame::main(){
 	bool quit = false;
-	
+
 	if(load_files() == false){return 1;}
 	if(!init_all_objects()){return 1;}
-	
-	Uint32 prevTimeStamp = SDL_GetTicks();
-	Uint32 curTimeStamp = SDL_GetTicks();
-	Uint32 timeElapsedMs = curTimeStamp - prevTimeStamp;
 
 	while(!quit)
 	{
-		//Clock Timer reading.
-		prevTimeStamp = curTimeStamp;
-		curTimeStamp = SDL_GetTicks();
-		timeElapsedMs = curTimeStamp - prevTimeStamp;
-
-		while(SDL_PollEvent(&event)){
-			if(event.type == SDL_QUIT){
-				quit = true;
-			}
-		}
-
-		SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 255,255,255));
-
-		//Fill/Reset the screen 
-		SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xCD, 0x85, 0x3F ) );
-
-		controller->update();	
-		if(controller->releaseCancel())
-			quit = true; //ESC terminates the program
-		//**********Gameobject/memory handling*********************
-		gameObjectManager.update(timeElapsedMs);
-		spatialHashing.update(gameObjectManager.activeGameObjects);
-		//*********************************************************
-		camera->followObject();
-
-		gameObjectManager.draw(screen, camera->getX(), camera->getY());
-
-		//Render the text
-		std::string s;
-		std::stringstream out1;
-		std::stringstream out2;
-		out1 << camera->getX();
-		out2 << camera->getY();
-		string resultCursorStr = "<" + out1.str() + " , " + out2.str() + ">";
-		string text = resultCursorStr;
-		
-		SDL_Surface *message = TTF_RenderText_Solid( font, text.c_str(), textColor );
-    
-		//If there was an error in rendering the text
-		if( message == NULL )
+		clock.update();
+		if(clock.allowTick())
 		{
-			return 1;    
-		}
-    
-		//Apply the images to the screen
-		apply_surface( 0, 150, message, screen );
+			while(SDL_PollEvent(&event)){
+				if(event.type == SDL_QUIT){
+					quit = true;
+				}
+			}
 
+			SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 255,255,255));
 
-		if(SDL_Flip(screen) == -1){return 1;}
+			//Fill/Reset the screen 
+			SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xCD, 0x85, 0x3F ) );
 
-		//Free any surfaces or anything that may be tacked again
-		SDL_FreeSurface( message );
+			controller->update();	
+			if(controller->releaseCancel())
+				quit = true; //ESC terminates the program
+			//**********Gameobject/memory handling*********************
+			gameObjectManager.update(clock.timeElapsed);
+			spatialHashing.update(gameObjectManager.activeGameObjects);
+			//*********************************************************
+			camera->followObject();
+
+			gameObjectManager.draw(screen, camera->getX(), camera->getY());
+
+			//Render the text
+			std::string s;
+			std::stringstream out1;
+			std::stringstream out2;
+			out1 << camera->getX();
+			out2 << camera->getY();
+			string resultCursorStr = "<" + out1.str() + " , " + out2.str() + ">";
+			string text = resultCursorStr;
+
+			SDL_Surface *message = TTF_RenderText_Solid( font, text.c_str(), textColor );
+
+			//If there was an error in rendering the text
+			if( message == NULL )
+			{
+				return 1;    
+			}
+
+			//Apply the images to the screen
+			apply_surface( 0, 150, message, screen );
+
+			if(SDL_Flip(screen) == -1){return 1;}
+
+			//Free any surfaces or anything that may be tacked again
+			SDL_FreeSurface( message );
+		}//end clock
+
 	}//Screen Loop End
 
 	return !quit;
@@ -114,7 +110,7 @@ bool MGame::init_all_objects()
 {
 	//Initialize controller
 	if(false) 
-		{} //TODO: Use conditioning to determine whether to use keyboard, gamepad or other input. -JVL
+	{} //TODO: Use conditioning to determine whether to use keyboard, gamepad or other input. -JVL
 	else 
 		controller = new KeyboardMouse;
 
@@ -125,17 +121,17 @@ bool MGame::init_all_objects()
 	gameObjectManager.addGameObject(deathPlayer);
 
 	//Load Monsters/Tiles here.
-	const int NUMBER_OF_MONSTERS = 1000;
+	const int NUMBER_OF_MONSTERS = 30;
 	for(int index = 0; index < NUMBER_OF_MONSTERS; index++)
 	{
-		Unit * newTest = new Bat(batImage);
+		Unit * newTest = new Bat(batImage, deathPlayer);
 		newTest->setPosition((25 * index) % 2048, (index * 25) % (768 * 2));
 		gameObjectManager.addGameObject(newTest);
 	}
 
 	//Camera!
 	camera = new Camera(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0,
-		300, deathPlayer);
+		500, deathPlayer);
 
 	return true;
 }
