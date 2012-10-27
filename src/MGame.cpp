@@ -24,6 +24,7 @@ GameObjectManager MGame::gameObjectManager;
 Camera * MGame::camera;
 SDL_Surface * MGame::batImage;
 SDL_Surface * MGame::deathImage;
+SDL_Surface * MGame::stuff;
 
 bool MGame::main(){
 	bool quit = false;
@@ -61,10 +62,8 @@ bool MGame::main(){
 			//Render the text
 			std::string s;
 			std::stringstream out1;
-			std::stringstream out2;
-			out1 << camera->getX();
-			out2 << camera->getY();
-			string resultCursorStr = "<" + out1.str() + " , " + out2.str() + ">";
+			out1 << deathPlayer->hitPoints;
+			string resultCursorStr = "Hit Points: " + out1.str();
 			string text = resultCursorStr;
 
 			SDL_Surface *message = TTF_RenderText_Solid( font, text.c_str(), textColor );
@@ -121,7 +120,7 @@ bool MGame::init_all_objects()
 	gameObjectManager.addGameObject(deathPlayer);
 
 	//Load Monsters/Tiles here.
-	const int NUMBER_OF_MONSTERS = 1000;
+	const int NUMBER_OF_MONSTERS = 5;
 	for(int index = 0; index < NUMBER_OF_MONSTERS; index++)
 	{
 		Unit * newTest = new Bat(batImage, deathPlayer);

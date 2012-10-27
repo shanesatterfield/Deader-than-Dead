@@ -1,5 +1,8 @@
 #pragma once
 #include "../Units/Unit.h"
+#include "../../GameObjectManager.h"
+#include "../PowerUps/HealthPowerUp.h"
+#include "../../../MGame.h"
 #include <cmath>
 class Bat : public Unit
 {
@@ -10,6 +13,7 @@ public:
 	void handleMovement(Uint32 timeElapsedMs);
 	void handleLook();
 	void changeRandomDirection();
+	void checkCollisionWith(GameObject * otherObject);
 
 private:
 	bool randomMovement;

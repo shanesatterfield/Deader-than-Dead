@@ -3,10 +3,11 @@
 
 #define NUM_FRAMES_X	3
 #define NUM_FRAMES_Y	5
+#define INIT_HIT_POINTS 3
 
 TestMonster::TestMonster(SDL_Surface* spriteSheet) 
 	: Unit(10, 382, GIRAFFE_FRAMESIZE_PIX, GIRAFFE_FRAMESIZE_PIX, 
-	NUM_FRAMES_X, NUM_FRAMES_Y, GIRAFFE_FRAMESIZE_PIX, GIRAFFE_FRAMESIZE_PIX, spriteSheet)
+	NUM_FRAMES_X, NUM_FRAMES_Y, GIRAFFE_FRAMESIZE_PIX, GIRAFFE_FRAMESIZE_PIX, spriteSheet, INIT_HIT_POINTS)
 {
 	goLeft = false;
 	this->type = (int)ObjectType::Enemy;

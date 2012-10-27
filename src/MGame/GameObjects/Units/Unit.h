@@ -7,9 +7,9 @@ class Unit : public GameObject
 public:
 	Animation sprite; 	//This is the sprite object handler. -JVL
 	//Argument constructor. -JVL
-	Unit(int xPosInit, int yPosInit, int widthCollision, int heightCollision, int numSheetColumns , int numSheetRows, int frameWidth, int frameHeight, SDL_Surface * spriteSheet);
+	Unit(int xPosInit, int yPosInit, int widthCollision, int heightCollision, int numSheetColumns , int numSheetRows, int frameWidth, int frameHeight, SDL_Surface * spriteSheet, int initHitPoints);
 	//Second Arguemnt constructor.
-	Unit(int xPosInit , int yPosInit , int widthCollision , int heightCollision, int numSheetColumns , int numSheetRows , int frameWidth , int frameHeight , SDL_Surface * spriteSheet,
+	Unit(int xPosInit , int yPosInit , int widthCollision , int heightCollision, int numSheetColumns , int numSheetRows , int frameWidth , int frameHeight , SDL_Surface * spriteSheet, int initHitPoints,
 		GameObject * gameObject);
 	~Unit();//Deconstructor
 	//The update function checks and does attribute/state changes. Reads in the amount of milleseconds elapsed since the last update cycle. -JVL
@@ -30,11 +30,16 @@ public:
 
 	//Takes in the otherobject, read the type and then makes state changes.
 	virtual void checkCollisionWith(GameObject * otherObject);
+	//Determines if the Unit is still invincible or not.
+	bool isInvincible();
+	void updateInvincibilityState(Uint32 timeElapsed);
+	int hitPoints;
 
 	//AI methods
 	void chaseTarget(Uint32 timeElapsed, int speed);
 
 protected:
+	int invTimeElapsed; //The amount of time the unit has before he can take damage again.
 	int xPosOld; //The unit's x position at the previous frame. -JVL
 	int yPosOld; //the unit's y position at the previous frame. -JVL
 };

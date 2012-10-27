@@ -24,7 +24,7 @@ public:
 		FrankensteinMonsters = 13,
 
 		//Power Ups (71-99)
-
+		HealthCandyCorn = 71,
 
 		//Environment Lower Layer (100 - 199)
 		Floor = 100,

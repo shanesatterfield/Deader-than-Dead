@@ -27,7 +27,6 @@
 class MGame: public GameScreen{
 private:
 	SDL_Event event;
-	SDL_Surface* stuff;
 	Clock clock;
 	bool load_files();
 	bool init_all_objects();
@@ -45,6 +44,7 @@ public:
 	static Camera * camera;
 	static SDL_Surface * batImage;
 	static SDL_Surface * deathImage;
+	static SDL_Surface * stuff;
 	TTF_Font *font;
 };
 

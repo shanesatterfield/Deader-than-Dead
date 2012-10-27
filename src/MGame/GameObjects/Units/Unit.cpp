@@ -1,7 +1,7 @@
 #include "Unit.h"
 
 Unit::Unit(int xPosInit , int yPosInit , int widthCollision , int heightCollision, 
-	int numSheetColumns , int numSheetRows , int frameWidth , int frameHeight , SDL_Surface * spriteSheet,
+	int numSheetColumns , int numSheetRows , int frameWidth , int frameHeight , SDL_Surface * spriteSheet, int initHitPoints,
 	GameObject * gameObject) 
 		: GameObject(xPosInit, yPosInit, widthCollision, heightCollision, 
 		(int)abs((widthCollision-frameWidth)/2), (int)abs((heightCollision-frameHeight)/2),
@@ -11,7 +11,7 @@ Unit::Unit(int xPosInit , int yPosInit , int widthCollision , int heightCollisio
 }
 
 Unit::Unit(int xPosInit , int yPosInit , int widthCollision , int heightCollision, 
-	int numSheetColumns , int numSheetRows , int frameWidth , int frameHeight , SDL_Surface * spriteSheet) 
+	int numSheetColumns , int numSheetRows , int frameWidth , int frameHeight , SDL_Surface * spriteSheet, int initHitPoints) 
 		: GameObject(xPosInit, yPosInit, widthCollision, heightCollision, 
 		(int)abs((widthCollision-frameWidth)/2), (int)abs((heightCollision-frameHeight)/2))
 {
@@ -49,6 +49,18 @@ bool Unit::stayedInSamePosition()
 {
 	return xPosOld == collisionBox.x && yPosOld == collisionBox.y;
 }
+
+bool Unit::isInvincible()
+{
+	return invTimeElapsed > 0;
+}
+
+void Unit::updateInvincibilityState(Uint32 timeElapsed)
+{
+	if(invTimeElapsed > 0)
+		invTimeElapsed -= timeElapsed;
+}
+
 
 void Unit::chaseTarget(Uint32 timeElapsed, int speed)
 {

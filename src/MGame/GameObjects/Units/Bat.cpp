@@ -1,14 +1,15 @@
 #include "Bat.h"
-#include "../../Constants.h"
 
 #define NUM_FRAMES_X	2
 #define NUM_FRAMES_Y	2
+#define INIT_HIT_POINTS 1
 #define CHANGE_TO_RANDOM_MOVEMENT 200
 #define CHANGE_TO_CHASE 800
+#define INVINCE_TIME_MS 200
 
 Bat::Bat(SDL_Surface* spriteSheet, GameObject * target) 
 	: Unit(10, 382, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, 
-	NUM_FRAMES_X, NUM_FRAMES_Y, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, spriteSheet, target)
+	NUM_FRAMES_X, NUM_FRAMES_Y, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, spriteSheet, INIT_HIT_POINTS, target)
 {
 	randomMovement = false;
 	this->type = (int)ObjectType::Enemy;
@@ -16,7 +17,7 @@ Bat::Bat(SDL_Surface* spriteSheet, GameObject * target)
 
 Bat::Bat(SDL_Surface* spriteSheet) 
 	: Unit(10, 382, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, 
-	NUM_FRAMES_X, NUM_FRAMES_Y, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, spriteSheet)
+	NUM_FRAMES_X, NUM_FRAMES_Y, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, spriteSheet, INIT_HIT_POINTS)
 {
 	randomMovement = false;
 	this->type = (int)ObjectType::Enemy;
@@ -24,7 +25,9 @@ Bat::Bat(SDL_Surface* spriteSheet)
 
 void Bat::update(Uint32 timeElapsedMs)
 {
-	
+	//Counts down the amount of time the unit is invincible.
+	updateInvincibilityState(timeElapsedMs); 
+
 	//Get distance of bat to player
 	int xDiff = target->centerX() - this->centerX();
 	int yDiff = target->centerY() - this->centerY();
@@ -93,4 +96,27 @@ void Bat::handleLook()
 		this->sprite.curRow = 0; //Magic Numbers T.T
 	else
 		this->sprite.curRow = 1; //Magic Numbers T.T
+}
+
+void Bat::checkCollisionWith(GameObject * otherObject)
+{
+	switch(otherObject->type)
+	{
+	case ObjectType::Death:
+		if(!isInvincible())
+		{
+			invTimeElapsed = INVINCE_TIME_MS; //Start the timer
+			hitPoints--;
+
+			if(hitPoints <= 0)
+			{
+				GameObjectManager::queuedNewGameObjects.push_back(new HealthPowerUp(pos.x, pos.y, MGame::stuff));
+				deallocate = true;
+			}
+
+		}
+		break;
+	default:
+		break;
+	}
 }
