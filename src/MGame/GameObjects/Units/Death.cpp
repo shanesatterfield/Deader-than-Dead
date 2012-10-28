@@ -21,22 +21,35 @@ Death::Death(int xPos, int yPos, SDL_Surface* spriteSheet, Controller* controlle
 	this->invTimeElapsed = 0;
 	this->attackState = AttackMode::RangedStandby;
 	this->abilityCooldown = 0;
+	for(int i = 0; i < NUMBER_OF_COOLDOWNS; i++)
+		cooldowns[i] = 0;
+}
+
+bool Death::switchToNewStandby(int newMode)
+{
+	if(cooldowns[newMode] <= 0)
+	{
+		attackState = newMode;
+		return true;
+	}
+	return false;
 }
 
 void Death::update(Uint32 timeElapsedMs)
 {
 	saveCurPosToOldPos(); //Retains previous frame data before changes.
 	updateInvincibilityState(timeElapsedMs); //Counts down the amount of time the unit is invincible.
-	abilityCooldown -= timeElapsedMs;
+	cooldownAllAbilities(timeElapsedMs);
 
 	//Controller switching
 	if(controller->tapAbility1())
-		attackState = AttackMode::MeleeStandby;
+		switchToNewStandby(AttackMode::MeleeStandby);
 	else if(controller->tapAbility2())
-		attackState = AttackMode::RangedStandby;
+		switchToNewStandby(AttackMode::RangedStandby);
 	else if(controller->tapAbility3())
-		attackState = AttackMode::AoEStandby;
-	if(controller->tapPrimary() && abilityCooldown <= 0)
+		switchToNewStandby(AttackMode::AoEStandby);
+	if(controller->tapPrimary() && attackState < NUMBER_OF_COOLDOWNS 
+		&& cooldowns[attackState] <= 0)
 	{
 		//If you change AttackMode's Enum's numbers, this will break!
 		attackState = attackState + 10;
@@ -71,6 +84,13 @@ void Death::update(Uint32 timeElapsedMs)
 			break;
 		}
 	}
+}
+
+void Death::cooldownAllAbilities(Uint32 timeElapsedMs)
+{
+	for(int i = 0; i < NUMBER_OF_COOLDOWNS; i++)
+		if(cooldowns[i] <= 0)
+			cooldowns[i] -= timeElapsedMs;
 }
 
 void Death::handleMovement(Uint32 timeElapsedMs)
@@ -117,6 +137,9 @@ void Death::checkCollisionWith(GameObject * otherObject)
 			invTimeElapsed = INVINCE_TIME_MS; //Start the timer
 			hitPoints--;
 		}
+		break;
+	case ObjectType::HealthCandyCorn:
+		hitPoints++;
 		break;
 	default:
 		break;

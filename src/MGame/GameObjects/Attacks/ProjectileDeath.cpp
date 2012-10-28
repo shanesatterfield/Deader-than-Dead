@@ -13,6 +13,8 @@ ProjectileDeath::ProjectileDeath(int xPosInit, int yPosInit, int xDirection, int
 	timeToLive = TIME_TO_LIVE;
 	xVelocity = xDirection;
 	yVelocity = yDirection;
+	type = ObjectType::PlayerRanged;
+	target = NULL; //Used to mark whether it has hit an object so that if two objects overlap the projectile only one gets hit.
 }
 
 void ProjectileDeath::update(Uint32 timeElapsedMs)
@@ -38,9 +40,7 @@ void ProjectileDeath::checkCollisionWith(GameObject * otherObject)
 	int typeNum = otherObject->type;
 	if(0 < typeNum && typeNum < 70)
 	{
-		Unit * thisUnit = dynamic_cast<Unit*>(otherObject);
-		thisUnit->hitPoints--;
-		if(thisUnit->hitPoints <= 0)
-			thisUnit->deallocate = true;
+		target = otherObject;
+		deallocate = true;
 	}
 }

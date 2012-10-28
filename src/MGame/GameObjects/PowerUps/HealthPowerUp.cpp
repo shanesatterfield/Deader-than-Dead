@@ -19,7 +19,6 @@ void HealthPowerUp::checkCollisionWith(GameObject * otherObject)
 {
 	if(otherObject->type == ObjectType::Death)
 	{
-		Death * thisDeath = dynamic_cast<Death*>(otherObject);
-		thisDeath->hitPoints++;
+		deallocate = true;
 	}
 }

@@ -102,20 +102,18 @@ void Bat::checkCollisionWith(GameObject * otherObject)
 {
 	switch(otherObject->type)
 	{
-	case ObjectType::Death:
-		if(!isInvincible())
+	case ObjectType::PlayerRanged:
+		if(!isInvincible() && otherObject->target == this)
 		{
 			invTimeElapsed = INVINCE_TIME_MS; //Start the timer
 			hitPoints--;
 
-			if(hitPoints <= 0)
+			if(hitPoints <= 0 )
 			{
 				GameObjectManager::queuedNewGameObjects.push_back(new HealthPowerUp(pos.x, pos.y, MGame::stuff));
 				deallocate = true;
 			}
-
 		}
-		break;
 	default:
 		break;
 	}

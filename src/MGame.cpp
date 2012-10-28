@@ -26,6 +26,63 @@ SDL_Surface * MGame::batImage;
 SDL_Surface * MGame::deathImage;
 SDL_Surface * MGame::stuff;
 
+//Loading Files (Sprites, Fonts, Music).
+bool MGame::load_files(){
+	gScreen = load_image("res/background.png");
+	stuff = load_image("res/pumpkin.png");
+	this->deathImage = load_image("res/deathSprites.png");
+	this->batImage = load_image("res/enemySprites.png");
+	if(gScreen == NULL || stuff == NULL || 
+		deathImage == NULL || batImage == NULL)
+		return false;
+
+	font = TTF_OpenFont("res/bloodcrow.ttf", 28);
+	if(font == NULL) return false;
+
+	return true;
+}
+
+//Object initialization. Passes in loaded files.
+bool MGame::init_all_objects()
+{
+	//Initialize controller
+	if(false) 
+	{} //TODO: Use conditioning to determine whether to use keyboard, gamepad or other input. -JVL
+	else 
+		controller = new KeyboardMouse;
+
+	if(!controller->init()) return false;
+
+	//Initialize Player Death and add to master gameobject list.
+	deathPlayer = new Death(400, 300, deathImage, controller);
+	gameObjectManager.addGameObject(deathPlayer);
+
+	//Load Monsters/Tiles here.
+	const int NUMBER_OF_MONSTERS = 100;
+	for(int index = 0; index < NUMBER_OF_MONSTERS; index++)
+	{
+		Unit * newTest = new Bat(batImage, deathPlayer);
+		newTest->setPosition((32 * index) % 1600, (index * 25) % (768 * 2) % 1200);
+		gameObjectManager.addGameObject(newTest);
+	}
+
+	//Camera!
+	camera = new Camera(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0,
+		500, deathPlayer);
+
+	return true;
+}
+
+//Constructor
+MGame::MGame(SDL_Event &tEvent){
+	event = tEvent;
+}
+
+//Deconstructor
+MGame::~MGame(){
+	SDL_FreeSurface(stuff);
+}
+
 bool MGame::main(){
 	bool quit = false;
 
@@ -86,61 +143,4 @@ bool MGame::main(){
 	}//Screen Loop End
 
 	return !quit;
-}
-
-//Loading Files (Sprites, Fonts, Music).
-bool MGame::load_files(){
-	gScreen = load_image("res/background.png");
-	stuff = load_image("res/pumpkin.png");
-	this->deathImage = load_image("res/deathSprites.png");
-	this->batImage = load_image("res/enemySprites.png");
-	if(gScreen == NULL || stuff == NULL || 
-		deathImage == NULL || batImage == NULL)
-		return false;
-
-	font = TTF_OpenFont("res/bloodcrow.ttf", 28);
-	if(font == NULL) return false;
-
-	return true;
-}
-
-//Object initialization. Passes in loaded files.
-bool MGame::init_all_objects()
-{
-	//Initialize controller
-	if(false) 
-	{} //TODO: Use conditioning to determine whether to use keyboard, gamepad or other input. -JVL
-	else 
-		controller = new KeyboardMouse;
-
-	if(!controller->init()) return false;
-
-	//Initialize Player Death and add to master gameobject list.
-	deathPlayer = new Death(400, 300, deathImage, controller);
-	gameObjectManager.addGameObject(deathPlayer);
-
-	//Load Monsters/Tiles here.
-	const int NUMBER_OF_MONSTERS = 5;
-	for(int index = 0; index < NUMBER_OF_MONSTERS; index++)
-	{
-		Unit * newTest = new Bat(batImage, deathPlayer);
-		newTest->setPosition((32 * index) % 1600, (index * 25) % (768 * 2) % 1200);
-		gameObjectManager.addGameObject(newTest);
-	}
-
-	//Camera!
-	camera = new Camera(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0,
-		500, deathPlayer);
-
-	return true;
-}
-
-//Constructor
-MGame::MGame(SDL_Event &tEvent){
-	event = tEvent;
-}
-
-//Deconstructor
-MGame::~MGame(){
-	SDL_FreeSurface(stuff);
 }

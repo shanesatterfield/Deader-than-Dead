@@ -35,6 +35,7 @@ public:
 
 		//Attacks (300+)
 		PlayerMelee = 301,
+		PlayerRanged = 302,
 
 		PassableWithoutEffect = 999
 	};
