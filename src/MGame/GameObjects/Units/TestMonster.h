@@ -1,6 +1,5 @@
 #pragma once
 #include "../Units/Unit.h"
-#include "../../Constants.h"
 
 class TestMonster : public Unit
 {

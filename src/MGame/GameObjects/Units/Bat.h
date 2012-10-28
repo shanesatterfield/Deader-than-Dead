@@ -1,8 +1,8 @@
 #pragma once
 #include "../Units/Unit.h"
-#include "../../GameObjectManager.h"
 #include "../PowerUps/HealthPowerUp.h"
 #include "../../../MGame.h"
+
 #include <cmath>
 class Bat : public Unit
 {

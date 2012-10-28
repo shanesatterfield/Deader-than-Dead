@@ -1,6 +1,9 @@
 #pragma once
 #include "../GameObject.h"
+#include "../../GameObjectManager.h"
 #include "../../Animation.h"
+#include "../../Constants.h"
+
 
 class Unit : public GameObject
 {

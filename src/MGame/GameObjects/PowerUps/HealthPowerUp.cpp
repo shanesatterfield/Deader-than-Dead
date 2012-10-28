@@ -1,6 +1,5 @@
 #pragma once
 #include "HealthPowerUp.h"
-#include "../../Constants.h"
 #include "../ObjectType.h"
 #include "../Units/Death.h"
 #include <memory>

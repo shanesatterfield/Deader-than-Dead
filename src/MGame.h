@@ -36,7 +36,6 @@ public:
 	~MGame();
 	bool main();
 
-	//New features!
 	Controller * controller;
 	Death * deathPlayer;
 	static SpatialHashing spatialHashing;

@@ -1,11 +1,14 @@
+#pragma once
 #include "Death.h"
+#include "../Attacks/ProjectileDeath.h"
 #include "../../Camera.h"
-#include "../../Constants.h"
+#include "../../../MGame.h"
 
 #define NUM_FRAMES_X	3
 #define NUM_FRAMES_Y	4
 #define INIT_HIT_POINTS 3
 #define INVINCE_TIME_MS 900
+#define RANGED_COOLDOWN 200
 
 Death::Death(int xPos, int yPos, SDL_Surface* spriteSheet, Controller* controller)
 	: Unit(xPos, yPos, STANDARD_FRAMESIZE_PIX / 2, STANDARD_FRAMESIZE_PIX, 
@@ -16,16 +19,58 @@ Death::Death(int xPos, int yPos, SDL_Surface* spriteSheet, Controller* controlle
 	this->hitPoints = 3;
 	this->invincible = false;
 	this->invTimeElapsed = 0;
+	this->attackState = AttackMode::RangedStandby;
+	this->abilityCooldown = 0;
 }
 
 void Death::update(Uint32 timeElapsedMs)
 {
 	saveCurPosToOldPos(); //Retains previous frame data before changes.
 	updateInvincibilityState(timeElapsedMs); //Counts down the amount of time the unit is invincible.
+	abilityCooldown -= timeElapsedMs;
 
-	handleMovement(timeElapsedMs);
-	handleLook();
-	sprite.update(timeElapsedMs);
+	//Controller switching
+	if(controller->tapAbility1())
+		attackState = AttackMode::MeleeStandby;
+	else if(controller->tapAbility2())
+		attackState = AttackMode::RangedStandby;
+	else if(controller->tapAbility3())
+		attackState = AttackMode::AoEStandby;
+	if(controller->tapPrimary() && abilityCooldown <= 0)
+	{
+		//If you change AttackMode's Enum's numbers, this will break!
+		attackState = attackState + 10;
+	}
+
+	if(attackState < 10) //Moving
+	{
+		handleMovement(timeElapsedMs);
+		handleLook();
+		sprite.update(timeElapsedMs);
+	}
+	else //attacking
+	{
+		switch(attackState)
+		{
+		case AttackMode::MeleeAttack:
+			break;
+		case AttackMode::RangedAttack:
+			abilityCooldown = RANGED_COOLDOWN;		//Apply cooldown
+			GameObjectManager::queuedNewGameObjects.push_back(
+				new ProjectileDeath(
+					pos.x, 
+					pos.y, 
+					controller->xCursor + Camera::boxPosAndSize.x - pos.x,
+					controller->yCursor + Camera::boxPosAndSize.y - pos.y,
+					MGame::stuff));
+			attackState = AttackMode::RangedStandby;
+			break;
+		case AttackMode::AoEAttack:
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void Death::handleMovement(Uint32 timeElapsedMs)
