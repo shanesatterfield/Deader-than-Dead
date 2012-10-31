@@ -12,6 +12,7 @@ public:
 	void update(Uint32 timeElapsedMs);
 	void checkCollisionWith(GameObject * otherObject);
 	bool invincible;
+	static int killCount;
 
 private:
 	Controller * controller; //A reference to the controller. This pointer will be used to update the state of Death.

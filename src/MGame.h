@@ -45,6 +45,7 @@ public:
 	static SDL_Surface * batImage;
 	static SDL_Surface * deathImage;
 	static SDL_Surface * stuff;
+	static SDL_Surface * projectileImage;
 	TTF_Font *font;
 };
 

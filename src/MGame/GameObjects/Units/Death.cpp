@@ -12,19 +12,22 @@
 #define INVINCE_TIME_MS 900
 #define RANGED_COOLDOWN 200
 
+int Death::killCount = 0;
+
 Death::Death(int xPos, int yPos, SDL_Surface* spriteSheet, Controller* controller)
 	: Unit(xPos, yPos, STANDARD_FRAMESIZE_PIX / 2, STANDARD_FRAMESIZE_PIX, 
 	NUM_FRAMES_X, NUM_FRAMES_Y, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, spriteSheet, INIT_HIT_POINTS)
 {
 	this->controller = controller;
 	this->type = (int)ObjectType::Death;
-	this->hitPoints = 3;
+	this->hitPoints = 0;
 	this->invincible = false;
 	this->invTimeElapsed = 0;
 	this->attackState = AttackMode::RangedStandby;
 	this->abilityCooldown = 0;
 	for(int i = 0; i < NUMBER_OF_COOLDOWNS; i++)
 		cooldowns[i] = 0;
+	this->killCount = 0;
 }
 
 bool Death::switchToNewStandby(int newMode)
@@ -78,7 +81,7 @@ void Death::update(Uint32 timeElapsedMs)
 					pos.y, 
 					controller->xCursor + Camera::boxPosAndSize.x - pos.x,
 					controller->yCursor + Camera::boxPosAndSize.y - pos.y,
-					MGame::stuff));
+					MGame::projectileImage));
 			attackState = AttackMode::RangedStandby;
 			break;
 		case AttackMode::AoEAttack:

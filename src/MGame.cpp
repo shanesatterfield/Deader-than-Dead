@@ -25,15 +25,19 @@ Camera * MGame::camera;
 SDL_Surface * MGame::batImage;
 SDL_Surface * MGame::deathImage;
 SDL_Surface * MGame::stuff;
+SDL_Surface * MGame::projectileImage;
 
 //Loading Files (Sprites, Fonts, Music).
 bool MGame::load_files(){
 	gScreen = load_image("res/background.png");
-	stuff = load_image("res/pumpkin.png");
+	stuff = load_image("res/objectsSpriteSheet.png");
 	this->deathImage = load_image("res/deathSprites.png");
 	this->batImage = load_image("res/enemySprites.png");
+	projectileImage = NULL;
+	this->projectileImage = load_image("res/spiritProjectile.png");
 	if(gScreen == NULL || stuff == NULL || 
-		deathImage == NULL || batImage == NULL)
+		deathImage == NULL || batImage == NULL ||
+		projectileImage == NULL)
 		return false;
 
 	font = TTF_OpenFont("res/bloodcrow.ttf", 28);
@@ -67,8 +71,8 @@ bool MGame::init_all_objects()
 	}
 
 	//Distributes the stuff.
-	const int X_GAP = 400;
-	const int Y_GAP = 400;
+	const int X_GAP = 392;
+	const int Y_GAP = 292;
 	for(int x = 0; x < SCREEN_WIDTH * 2; x++)
 	{
 		for(int y = 0; y < SCREEN_HEIGHT * 2; y++)
@@ -94,7 +98,13 @@ MGame::MGame(SDL_Event &tEvent){
 
 //Deconstructor
 MGame::~MGame(){
+	delete controller;
+	delete camera;
+	SDL_FreeSurface(batImage);
+	SDL_FreeSurface(deathImage);
 	SDL_FreeSurface(stuff);
+	SDL_FreeSurface(projectileImage);
+	//TTF_CloseFont(font); //Causes Crash upon exe termination. 
 }
 
 bool MGame::main(){
@@ -113,15 +123,10 @@ bool MGame::main(){
 					quit = true;
 				}
 			}
-
-			SDL_FillRect(screen, &screen->clip_rect, SDL_MapRGB(screen->format, 255,255,255));
-
 			//Fill/Reset the screen 
 			SDL_FillRect( screen, &screen->clip_rect, SDL_MapRGB( screen->format, 0xCD, 0x85, 0x3F ) );
 
 			controller->update();	
-			if(controller->releaseCancel())
-				quit = true; //ESC terminates the program
 			//**********Gameobject/memory handling*********************
 			gameObjectManager.update(clock.timeElapsed);
 			spatialHashing.update(gameObjectManager.getAllObjectsList());
@@ -136,40 +141,45 @@ bool MGame::main(){
 			else if(deathPlayer->collisionBox.y + deathPlayer->collisionBox.h > SCREEN_HEIGHT * 2)
 				deathPlayer->setPosition(deathPlayer->pos.x, SCREEN_HEIGHT * 2 - deathPlayer->collisionBox.h);
 
-
 			//*********************************************************
 			camera->followObject();
 
 			gameObjectManager.draw(screen, camera->getX(), camera->getY());
 
-			//Render the text
+			//Render the Health
 			std::string s;
 			std::stringstream out1;
 			out1 << deathPlayer->hitPoints;
 			string resultCursorStr = "Health: " + out1.str();
-			string text = resultCursorStr;
+			SDL_Surface *message = TTF_RenderText_Solid( font, resultCursorStr.c_str(), textColor );
+			//Render the Kills
+			std::stringstream out2;
+			out2 << deathPlayer->killCount;
+			resultCursorStr = "Score: " + out2.str();
+			SDL_Surface *message2 = TTF_RenderText_Solid( font, resultCursorStr.c_str(), textColor );
 
-			SDL_Surface *message = TTF_RenderText_Solid( font, text.c_str(), textColor );
 
 			//If there was an error in rendering the text
 			if( message == NULL )
-			{
 				return 1;    
-			}
 
 			//Apply the images to the screen. Detect end of game.
 			if(deathPlayer->hitPoints > 0)
-				apply_surface( 0, 150, message, screen );
-			//else
-			//	quit = true;
+			{
+				apply_surface( 0, 100, message, screen );
+				apply_surface( 500, 100, message2, screen);
+			}
+			else
+				quit = true;
 
 			if(SDL_Flip(screen) == -1){return 1;}
 
 			//Free any surfaces or anything that may be tacked again
 			SDL_FreeSurface( message );
+			SDL_FreeSurface( message2 );
 		}//end clock
-
 	}//Screen Loop End
 
-	return !quit;
+
+	return !quit; //End of Game!
 }
