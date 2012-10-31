@@ -54,11 +54,11 @@ bool MGame::init_all_objects()
 	if(!controller->init()) return false;
 
 	//Initialize Player Death and add to master gameobject list.
-	deathPlayer = new Death(400, 300, deathImage, controller);
+	deathPlayer = new Death(800, 600, deathImage, controller);
 	gameObjectManager.addGameObject(deathPlayer);
 
 	//Load Monsters/Tiles here.
-	const int NUMBER_OF_MONSTERS = 100;
+	const int NUMBER_OF_MONSTERS = 3;
 	for(int index = 0; index < NUMBER_OF_MONSTERS; index++)
 	{
 		Unit * newTest = new Bat(batImage, deathPlayer);
@@ -66,9 +66,23 @@ bool MGame::init_all_objects()
 		gameObjectManager.addGameObject(newTest);
 	}
 
+	//Distributes the stuff.
+	const int X_GAP = 400;
+	const int Y_GAP = 400;
+	for(int x = 0; x < SCREEN_WIDTH * 2; x++)
+	{
+		for(int y = 0; y < SCREEN_HEIGHT * 2; y++)
+		{
+			gameObjectManager.addGameObject(
+				new HealthPowerUp(x, y, stuff));
+			y += Y_GAP;
+		}
+		x += X_GAP;
+	}
+
 	//Camera!
 	camera = new Camera(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0,
-		500, deathPlayer);
+		200, deathPlayer);
 
 	return true;
 }
@@ -111,6 +125,18 @@ bool MGame::main(){
 			//**********Gameobject/memory handling*********************
 			gameObjectManager.update(clock.timeElapsed);
 			spatialHashing.update(gameObjectManager.getAllObjectsList());
+			
+			//Ensure Death does not go off the map.
+			if(deathPlayer->pos.x < 0)
+				deathPlayer->setPosition(0, deathPlayer->pos.y);
+			else if(deathPlayer->pos.x + deathPlayer->collisionBox.w > SCREEN_WIDTH * 2)
+				deathPlayer->setPosition(SCREEN_WIDTH * 2 - deathPlayer->collisionBox.w, deathPlayer->pos.y);
+			if(deathPlayer->collisionBox.y < 0)
+				deathPlayer->setPosition(deathPlayer->pos.x, 0);
+			else if(deathPlayer->collisionBox.y + deathPlayer->collisionBox.h > SCREEN_HEIGHT * 2)
+				deathPlayer->setPosition(deathPlayer->pos.x, SCREEN_HEIGHT * 2 - deathPlayer->collisionBox.h);
+
+
 			//*********************************************************
 			camera->followObject();
 
@@ -120,7 +146,7 @@ bool MGame::main(){
 			std::string s;
 			std::stringstream out1;
 			out1 << deathPlayer->hitPoints;
-			string resultCursorStr = "Hit Points: " + out1.str();
+			string resultCursorStr = "Health: " + out1.str();
 			string text = resultCursorStr;
 
 			SDL_Surface *message = TTF_RenderText_Solid( font, text.c_str(), textColor );
@@ -131,8 +157,11 @@ bool MGame::main(){
 				return 1;    
 			}
 
-			//Apply the images to the screen
-			apply_surface( 0, 150, message, screen );
+			//Apply the images to the screen. Detect end of game.
+			if(deathPlayer->hitPoints > 0)
+				apply_surface( 0, 150, message, screen );
+			//else
+			//	quit = true;
 
 			if(SDL_Flip(screen) == -1){return 1;}
 

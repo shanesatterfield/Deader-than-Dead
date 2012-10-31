@@ -1,6 +1,5 @@
 #pragma once
 #include "../Units/Unit.h"
-#include "../PowerUps/HealthPowerUp.h"
 #include "../../../MGame.h"
 
 #include <cmath>

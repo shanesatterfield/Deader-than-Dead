@@ -6,6 +6,8 @@
 #define CHANGE_TO_RANDOM_MOVEMENT 200
 #define CHANGE_TO_CHASE 800
 #define INVINCE_TIME_MS 200
+#define MAP_W 1600
+#define MAP_H 1200
 
 Bat::Bat(SDL_Surface* spriteSheet, GameObject * target) 
 	: Unit(10, 382, STANDARD_FRAMESIZE_PIX, STANDARD_FRAMESIZE_PIX, 
@@ -43,7 +45,7 @@ void Bat::update(Uint32 timeElapsedMs)
 		xVelocity /= normalization;
 		yVelocity /= normalization;
 	}
-	else if(randomMovement && distance > CHANGE_TO_CHASE)
+	else if(distance > CHANGE_TO_CHASE)
 		randomMovement = false;
 
 	saveCurPosToOldPos(); //Retains previous frame data before changes.
@@ -110,8 +112,34 @@ void Bat::checkCollisionWith(GameObject * otherObject)
 
 			if(hitPoints <= 0 )
 			{
-				GameObjectManager::queuedNewGameObjects.push_back(new HealthPowerUp(pos.x, pos.y, MGame::stuff));
 				deallocate = true;
+				for(int i = 0; i < 2; i++)
+				{
+					//Determine whether to put it in the x border or y border.
+					int caseBorderNum = rand() % 4;
+					int xNewPos = 0; int yNewPos = 0;
+					switch(caseBorderNum) //0-2 inclusive; 50% chance
+					{
+						case 1: //top
+							xNewPos = rand() % MAP_W;
+							break;
+						case 2: //right
+							xNewPos = MAP_W;
+							yNewPos = rand() % MAP_H;
+							break;
+						case 3: //bottom
+							xNewPos= rand() % MAP_W;
+							yNewPos = MAP_H;
+							break;
+						default: //left
+							yNewPos = rand() % MAP_H;
+							break;
+					}
+
+					Bat * tempBat = new Bat(MGame::batImage, target);
+					tempBat->setPosition(xNewPos, yNewPos);
+					GameObjectManager::queuedNewGameObjects.push_back(tempBat);
+				}
 			}
 		}
 	default:

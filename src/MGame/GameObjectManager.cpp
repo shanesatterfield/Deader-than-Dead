@@ -130,6 +130,7 @@ vector<GameObject*> GameObjectManager::getAllObjectsList()
 		activeGameObjectsLayer3.size() + 
 		activeGameObjectsLayer4.size());
 
+
 	//merge 1-2 as list, then list-3, then list-4.
 	std::merge(activeGameObjectsLayer1.begin(),
 		activeGameObjectsLayer1.end(),

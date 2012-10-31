@@ -19,6 +19,7 @@
 #include "MGame/GameObjects/Units/Bat.h"
 #include "MGame/GameObjects/Units/Death.h"
 #include "MGame/GameObjects/Units/TestMonster.h"
+#include "MGame/GameObjects/PowerUps/HealthPowerUp.h"
 #include <string>
 #include <stdlib.h>
 #include <sstream>

@@ -1,8 +1,10 @@
 #pragma once
 #include "Death.h"
+#include "Bat.h"
 #include "../Attacks/ProjectileDeath.h"
 #include "../../Camera.h"
 #include "../../../MGame.h"
+#include "../../GameObjectManager.h"
 
 #define NUM_FRAMES_X	3
 #define NUM_FRAMES_Y	4
@@ -42,12 +44,13 @@ void Death::update(Uint32 timeElapsedMs)
 	cooldownAllAbilities(timeElapsedMs);
 
 	//Controller switching
+	/* DISABLED SO THAT THE PLAYER DOES NOT ACCESS INCOMPLETE ABILITIES.
 	if(controller->tapAbility1())
 		switchToNewStandby(AttackMode::MeleeStandby);
 	else if(controller->tapAbility2())
 		switchToNewStandby(AttackMode::RangedStandby);
 	else if(controller->tapAbility3())
-		switchToNewStandby(AttackMode::AoEStandby);
+		switchToNewStandby(AttackMode::AoEStandby);*/
 	if(controller->tapPrimary() && attackState < NUMBER_OF_COOLDOWNS 
 		&& cooldowns[attackState] <= 0)
 	{
